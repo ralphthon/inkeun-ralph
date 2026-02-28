@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loader Lego Cleanup Simulator</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { overflow: hidden; background: #1a1a2e; font-family: 'Segoe UI', sans-serif; }
+    canvas { display: block; }
+
+    #hud {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 12px 16px;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    .hud-left, .hud-right { display: flex; gap: 8px; align-items: flex-start; }
+
+    .hud-box {
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+      padding: 8px 14px;
+      color: #fff;
+      font-size: 13px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+
+    .hud-box .label { opacity: 0.7; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
+    .hud-box .value { font-weight: 700; font-size: 18px; }
+
+    #state-box .value { color: #ff6b6b; font-size: 14px; }
+    #legos-box .value { color: #4ecdc4; }
+    #collected-box .value { color: #ffd700; }
+
+    #action-display {
+      position: fixed;
+      bottom: 16px;
+      left: 16px;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: #fff;
+      font-size: 12px;
+      font-family: 'Courier New', monospace;
+      z-index: 10;
+      pointer-events: none;
+      line-height: 1.6;
+    }
+
+    #recording-indicator {
+      position: fixed;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(220, 20, 20, 0.85);
+      border-radius: 20px;
+      padding: 6px 16px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      z-index: 10;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #recording-indicator .dot {
+      width: 10px; height: 10px;
+      background: #fff;
+      border-radius: 50%;
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    #complete-screen {
+      position: fixed;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(20px);
+      z-index: 100;
+      color: #fff;
+    }
+
+    #complete-screen .title {
+      font-size: 42px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #ffd700, #ff6b6b, #4ecdc4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
+
+    #complete-screen .stats {
+      font-size: 18px;
+      opacity: 0.8;
+      margin-bottom: 24px;
+      text-align: center;
+      line-height: 2;
+    }
+
+    #download-btn {
+      padding: 14px 40px;
+      font-size: 18px;
+      font-weight: 700;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #4ecdc4, #44d97c);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(78, 205, 196, 0.4);
+      transition: transform 0.2s;
+    }
+
+    #download-btn:hover { transform: scale(1.05); }
+
+    .miniview {
+      position: fixed;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 8px;
+      overflow: hidden;
+      z-index: 5;
+      pointer-events: none;
+      right: 12px;
+      width: 200px;
+      height: 140px;
+    }
+
+    #miniview-ego   { top: 60px; }
+    #miniview-bird  { top: 210px; }
+    #miniview-side  { top: 360px; }
+    #miniview-front { top: 510px; }
+
+    .miniview-label {
+      position: absolute;
+      bottom: 4px;
+      left: 8px;
+      color: rgba(255,255,255,0.7);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.8);
+    }
+  </style>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.172.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.172.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+
+  <!-- HUD -->
+  <div id="hud">
+    <div class="hud-left">
+      <div class="hud-box" id="state-box">
+        <span class="label">Agent State</span>
+        <span class="value" id="agent-state">SCANNING</span>
+      </div>
+      <div class="hud-box" id="legos-box">
+        <span class="label">Remaining</span>
+        <span class="value" id="legos-remaining">0</span>
+      </div>
+      <div class="hud-box" id="collected-box">
+        <span class="label">Collected</span>
+        <span class="value" id="legos-collected">0</span>
+      </div>
+    </div>
+    <div class="hud-right">
+      <div class="hud-box">
+        <span class="label">Frame</span>
+        <span class="value" id="frame-count">0</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="recording-indicator">
+    <div class="dot"></div>
+    <span>REC</span>
+  </div>
+
+  <div id="action-display">
+    steering: 0.00<br>
+    throttle: 0.00<br>
+    bucket: 0.00<br>
+    lift: 0.00
+  </div>
+
+  <!-- Mini views (4 sub-cameras) -->
+  <div class="miniview" id="miniview-ego">
+    <canvas id="canvas-ego" width="200" height="140"></canvas>
+    <div class="miniview-label">EGO (1ST PERSON)</div>
+  </div>
+  <div class="miniview" id="miniview-bird">
+    <canvas id="canvas-bird" width="200" height="140"></canvas>
+    <div class="miniview-label">BIRD'S EYE</div>
+  </div>
+  <div class="miniview" id="miniview-side">
+    <canvas id="canvas-side" width="200" height="140"></canvas>
+    <div class="miniview-label">SIDE VIEW</div>
+  </div>
+  <div class="miniview" id="miniview-front">
+    <canvas id="canvas-front" width="200" height="140"></canvas>
+    <div class="miniview-label">FRONT ANGLE</div>
+  </div>
+
+  <!-- Complete Screen -->
+  <div id="complete-screen">
+    <div class="title">CLEANUP COMPLETE!</div>
+    <div class="stats" id="complete-stats"></div>
+    <button id="download-btn" style="display:none;">Download Video</button>
+  </div>
+
+  <script type="module">
+    import * as THREE from 'three';
+
+    // ====== CONFIG ======
+    const LEGO_COUNT = 20;
+    const ROOM_SIZE = 16;
+    const BOX_POS = new THREE.Vector3(-6, 0, -6);
+    const LOADER_START = new THREE.Vector3(4, 0, 4);
+    const SIM_DT = 1 / 30;
+
+    // ====== LEGO COLORS ======
+    const LEGO_COLORS = [
+      0xDA291C, 0x006DB7, 0xFED700, 0x00963E, 0xFF6D00,
+      0xE4E4E4, 0x9C27B0, 0x00BCD4, 0xF06292, 0x8D6E63,
+    ];
+
+    const BRICK_TYPES = [
+      { x: 4, z: 2 }, { x: 2, z: 2 }, { x: 3, z: 2 },
+      { x: 6, z: 2 }, { x: 1, z: 1 }, { x: 2, z: 1 },
+      { x: 4, z: 1 }, { x: 1, z: 2 },
+    ];
+
+    const UNIT = 0.8;
+    const BRICK_H = 0.96;
+    const STUD_R = 0.24;
+    const STUD_H = 0.17;
+
+    // ====== RENDERER (main follow view) ======
+    const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(1); // fixed for recording
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.2;
+    document.body.prepend(renderer.domElement);
+
+    // ====== Mini renderers (4 sub-views) ======
+    const MINI_W = 200, MINI_H = 140;
+
+    function makeMiniRenderer(canvasId) {
+      const c = document.getElementById(canvasId);
+      const r = new THREE.WebGLRenderer({ canvas: c, antialias: false });
+      r.setSize(MINI_W, MINI_H);
+      r.shadowMap.enabled = false;
+      r.toneMapping = THREE.ACESFilmicToneMapping;
+      return r;
+    }
+
+    const egoRenderer = makeMiniRenderer('canvas-ego');
+    const birdRenderer = makeMiniRenderer('canvas-bird');
+    const sideRenderer = makeMiniRenderer('canvas-side');
+    const frontRenderer = makeMiniRenderer('canvas-front');
+
+    // ====== SCENE ======
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x87CEEB);
+    scene.fog = new THREE.Fog(0x87CEEB, 25, 40);
+
+    // ====== CAMERAS ======
+    // Follow camera (main)
+    const followCam = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+    followCam.position.set(LOADER_START.x + 6, 8, LOADER_START.z + 8);
+    followCam.lookAt(LOADER_START);
+
+    // Ego camera (loader 1st person)
+    const egoCam = new THREE.PerspectiveCamera(70, 240 / 180, 0.1, 100);
+
+    // Bird's eye camera
+    const birdCam = new THREE.PerspectiveCamera(60, MINI_W / MINI_H, 0.1, 100);
+    birdCam.position.set(0, 14, 0);
+    birdCam.up.set(0, 0, -1);
+    birdCam.lookAt(0, 0, 0);
+
+    // Side camera (perpendicular to loader direction, tracks loader)
+    const sideCam = new THREE.PerspectiveCamera(50, MINI_W / MINI_H, 0.1, 100);
+
+    // Front-angle camera (ahead of loader, looking back)
+    const frontCam = new THREE.PerspectiveCamera(55, MINI_W / MINI_H, 0.1, 100);
+
+    // ====== LIGHTING ======
+    scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+
+    const sunLight = new THREE.DirectionalLight(0xfff5e0, 1.8);
+    sunLight.position.set(8, 15, 10);
+    sunLight.castShadow = true;
+    sunLight.shadow.mapSize.width = 2048;
+    sunLight.shadow.mapSize.height = 2048;
+    sunLight.shadow.camera.near = 0.5;
+    sunLight.shadow.camera.far = 40;
+    sunLight.shadow.camera.left = -12;
+    sunLight.shadow.camera.right = 12;
+    sunLight.shadow.camera.top = 12;
+    sunLight.shadow.camera.bottom = -12;
+    sunLight.shadow.bias = -0.001;
+    scene.add(sunLight);
+
+    scene.add(new THREE.DirectionalLight(0x8ecae6, 0.4).translateX(-5).translateY(8).translateZ(-5));
+
+    // ====== ROOM ======
+    function createRoom() {
+      const roomGroup = new THREE.Group();
+
+      // Floor
+      const floorGeo = new THREE.PlaneGeometry(ROOM_SIZE, ROOM_SIZE);
+      const floorMat = new THREE.MeshStandardMaterial({ color: 0xDEB887, roughness: 0.8 });
+      const floor = new THREE.Mesh(floorGeo, floorMat);
+      floor.rotation.x = -Math.PI / 2;
+      floor.receiveShadow = true;
+      roomGroup.add(floor);
+
+      // Floor planks
+      for (let i = -7; i <= 7; i++) {
+        const line = new THREE.Mesh(
+          new THREE.PlaneGeometry(0.02, ROOM_SIZE),
+          new THREE.MeshStandardMaterial({ color: 0xC8A882, roughness: 0.9 })
+        );
+        line.rotation.x = -Math.PI / 2;
+        line.position.set(i, 0.001, 0);
+        roomGroup.add(line);
+      }
+
+      // Walls REMOVED for unobstructed camera views (training data quality)
+      // Low boundary markers instead (thin lines on floor edge)
+      const edgeMat = new THREE.MeshStandardMaterial({ color: 0xBBBBBB, roughness: 0.8 });
+      [[-8, 0], [0, -8]].forEach(([x, z]) => {
+        const isX = z === -8;
+        const edge = new THREE.Mesh(
+          new THREE.BoxGeometry(isX ? ROOM_SIZE : 0.05, 0.02, isX ? 0.05 : ROOM_SIZE),
+          edgeMat
+        );
+        edge.position.set(x === -8 ? -8 : 0, 0.01, z === -8 ? -8 : 0);
+        roomGroup.add(edge);
+      });
+
+      // Storage box
+      const boxGroup = new THREE.Group();
+      const boxMat = new THREE.MeshStandardMaterial({ color: 0x4A90D9, roughness: 0.3 });
+      const boxBottom = new THREE.Mesh(new THREE.BoxGeometry(2.5, 0.1, 2), boxMat);
+      boxBottom.position.y = 0.05;
+      boxBottom.castShadow = true;
+      boxGroup.add(boxBottom);
+
+      const sideGeo = new THREE.BoxGeometry(2.5, 1, 0.1);
+      [[0, 0.5, 1], [0, 0.5, -1]].forEach(([x, y, z]) => {
+        const s = new THREE.Mesh(sideGeo, boxMat);
+        s.position.set(x, y, z);
+        s.castShadow = true;
+        boxGroup.add(s);
+      });
+      const sideGeo2 = new THREE.BoxGeometry(0.1, 1, 2);
+      [[-1.25, 0.5, 0], [1.25, 0.5, 0]].forEach(([x, y, z]) => {
+        const s = new THREE.Mesh(sideGeo2, boxMat);
+        s.position.set(x, y, z);
+        s.castShadow = true;
+        boxGroup.add(s);
+      });
+      boxGroup.position.set(BOX_POS.x, BOX_POS.y, BOX_POS.z);
+      roomGroup.add(boxGroup);
+
+      // Rug
+      const rug = new THREE.Mesh(
+        new THREE.CircleGeometry(3.5, 32),
+        new THREE.MeshStandardMaterial({ color: 0xD4B896, roughness: 0.95 })
+      );
+      rug.rotation.x = -Math.PI / 2;
+      rug.position.set(1, 0.005, 1);
+      roomGroup.add(rug);
+
+      // Bookshelf REMOVED (was against wall, would float without wall)
+
+      // Table
+      const tableMat = new THREE.MeshStandardMaterial({ color: 0xA0855B, roughness: 0.6 });
+      const tableTop = new THREE.Mesh(new THREE.BoxGeometry(2.5, 0.08, 1.8), tableMat);
+      tableTop.position.set(5.5, 1.2, -6.5);
+      tableTop.castShadow = true;
+      roomGroup.add(tableTop);
+      const legGeo = new THREE.CylinderGeometry(0.06, 0.06, 1.2, 8);
+      [[-1, -0.7], [1, -0.7], [-1, 0.7], [1, 0.7]].forEach(([lx, lz]) => {
+        const leg = new THREE.Mesh(legGeo, tableMat);
+        leg.position.set(5.5 + lx, 0.6, -6.5 + lz);
+        roomGroup.add(leg);
+      });
+
+      // Teddy bear
+      const bearMat = new THREE.MeshStandardMaterial({ color: 0xD2A679, roughness: 0.9 });
+      const bearBody = new THREE.Mesh(new THREE.SphereGeometry(0.25, 12, 12), bearMat);
+      bearBody.position.set(6, 0.25, 3);
+      bearBody.scale.y = 1.2;
+      roomGroup.add(bearBody);
+      const bearHead = new THREE.Mesh(new THREE.SphereGeometry(0.18, 12, 12), bearMat);
+      bearHead.position.set(6, 0.6, 3);
+      roomGroup.add(bearHead);
+
+      scene.add(roomGroup);
+    }
+
+    // ====== LEGO BRICKS ======
+    const bricks = [];
+    const studGeo = new THREE.CylinderGeometry(STUD_R, STUD_R, STUD_H, 8);
+
+    function createLegoBrick(studsX, studsZ, color) {
+      const group = new THREE.Group();
+      group.userData.color = color;
+      group.userData.collected = false;
+
+      const mat = new THREE.MeshStandardMaterial({ color, roughness: 0.25 });
+      const bodyW = studsX * UNIT;
+      const bodyD = studsZ * UNIT;
+      const body = new THREE.Mesh(new THREE.BoxGeometry(bodyW, BRICK_H, bodyD), mat);
+      body.position.y = BRICK_H / 2;
+      body.castShadow = true;
+      body.receiveShadow = true;
+      group.add(body);
+
+      for (let sx = 0; sx < studsX; sx++) {
+        for (let sz = 0; sz < studsZ; sz++) {
+          const stud = new THREE.Mesh(studGeo, mat);
+          stud.position.set(
+            (sx - (studsX - 1) / 2) * UNIT,
+            BRICK_H + STUD_H / 2,
+            (sz - (studsZ - 1) / 2) * UNIT
+          );
+          group.add(stud);
+        }
+      }
+      return group;
+    }
+
+    function scatterBricks(count) {
+      for (let i = 0; i < count; i++) {
+        const type = BRICK_TYPES[Math.floor(Math.random() * BRICK_TYPES.length)];
+        const color = LEGO_COLORS[Math.floor(Math.random() * LEGO_COLORS.length)];
+        const brick = createLegoBrick(type.x, type.z, color);
+
+        let px, pz;
+        do {
+          px = (Math.random() - 0.5) * 12;
+          pz = (Math.random() - 0.5) * 12;
+        } while (px < -4.5 && pz < -4.5); // avoid storage box area
+
+        brick.position.set(px, 0, pz);
+        brick.rotation.y = Math.random() * Math.PI * 2;
+
+        if (Math.random() < 0.3) {
+          brick.rotation.x = (Math.random() - 0.5) * 0.5;
+          brick.rotation.z = (Math.random() - 0.5) * 0.5;
+          brick.position.y = 0.1 + Math.random() * 0.2;
+        }
+
+        scene.add(brick);
+        bricks.push(brick);
+      }
+    }
+
+    // ====== LOADER MODEL ======
+    const loaderGroup = new THREE.Group();
+    let bucketPivot;
+    let bucketAngle = 0; // 0 = level, negative = lowered
+    let liftHeight = 0; // 0 = ground, 1 = max
+
+    function createLoader() {
+      // Body (yellow construction vehicle)
+      const bodyMat = new THREE.MeshStandardMaterial({ color: 0xFFCC00, roughness: 0.4, metalness: 0.1 });
+      const body = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.6, 2.4), bodyMat);
+      body.position.y = 0.5;
+      body.castShadow = true;
+      loaderGroup.add(body);
+
+      // Cabin
+      const cabinMat = new THREE.MeshStandardMaterial({ color: 0x333333, roughness: 0.3, metalness: 0.2 });
+      const cabin = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.5, 1.0), cabinMat);
+      cabin.position.set(0, 1.05, -0.3);
+      cabin.castShadow = true;
+      loaderGroup.add(cabin);
+
+      // Cabin glass
+      const glassMat = new THREE.MeshStandardMaterial({
+        color: 0x88CCFF, roughness: 0.05, metalness: 0.3, transparent: true, opacity: 0.5
+      });
+      const glass = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 0.4), glassMat);
+      glass.position.set(0, 1.1, 0.21);
+      loaderGroup.add(glass);
+
+      // Wheels
+      const wheelMat = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.8 });
+      const wheelGeo = new THREE.CylinderGeometry(0.25, 0.25, 0.2, 12);
+      const wheelPositions = [
+        [-0.8, 0.25, 0.8], [0.8, 0.25, 0.8],
+        [-0.8, 0.25, -0.8], [0.8, 0.25, -0.8]
+      ];
+      wheelPositions.forEach(([x, y, z]) => {
+        const wheel = new THREE.Mesh(wheelGeo, wheelMat);
+        wheel.position.set(x, y, z);
+        wheel.rotation.z = Math.PI / 2;
+        wheel.castShadow = true;
+        loaderGroup.add(wheel);
+      });
+
+      // Lift arms
+      const armMat = new THREE.MeshStandardMaterial({ color: 0xDDBB00, roughness: 0.5 });
+      [-0.7, 0.7].forEach(x => {
+        const arm = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.08, 1.5), armMat);
+        arm.position.set(x, 0.7, 1.0);
+        loaderGroup.add(arm);
+      });
+
+      // Bucket pivot (at front of loader)
+      bucketPivot = new THREE.Group();
+      bucketPivot.position.set(0, 0.4, 1.7);
+
+      const bucketMat = new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.5, metalness: 0.3 });
+
+      // Bucket bottom
+      const bucketBottom = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.06, 0.8), bucketMat);
+      bucketBottom.position.set(0, 0, 0.4);
+      bucketPivot.add(bucketBottom);
+
+      // Bucket back
+      const bucketBack = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.5, 0.06), bucketMat);
+      bucketBack.position.set(0, 0.25, 0);
+      bucketPivot.add(bucketBack);
+
+      // Bucket sides
+      const bucketSideGeo = new THREE.BoxGeometry(0.06, 0.5, 0.8);
+      [-0.77, 0.77].forEach(x => {
+        const side = new THREE.Mesh(bucketSideGeo, bucketMat);
+        side.position.set(x, 0.25, 0.4);
+        bucketPivot.add(side);
+      });
+
+      // Bucket teeth (front edge)
+      const toothMat = new THREE.MeshStandardMaterial({ color: 0x666666, roughness: 0.4 });
+      for (let i = 0; i < 5; i++) {
+        const tooth = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.15, 0.06), toothMat);
+        tooth.position.set(-0.6 + i * 0.3, -0.05, 0.82);
+        bucketPivot.add(tooth);
+      }
+
+      loaderGroup.add(bucketPivot);
+
+      // Exhaust pipe
+      const exhaust = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.05, 0.06, 0.4, 8),
+        new THREE.MeshStandardMaterial({ color: 0x555555, metalness: 0.5 })
+      );
+      exhaust.position.set(0.5, 1.1, -0.9);
+      loaderGroup.add(exhaust);
+
+      // Headlights
+      const lightMat = new THREE.MeshStandardMaterial({ color: 0xFFFFCC, emissive: 0xFFFF88, emissiveIntensity: 0.5 });
+      [-0.5, 0.5].forEach(x => {
+        const headlight = new THREE.Mesh(new THREE.SphereGeometry(0.08, 8, 8), lightMat);
+        headlight.position.set(x, 0.65, 1.22);
+        loaderGroup.add(headlight);
+      });
+
+      loaderGroup.position.copy(LOADER_START);
+      loaderGroup.castShadow = true;
+      scene.add(loaderGroup);
+    }
+
+    // ====== LOADER STATE ======
+    const loader = {
+      x: LOADER_START.x,
+      z: LOADER_START.z,
+      rotation: 0,
+      speed: 0,
+      maxSpeed: 3.0,
+      turnSpeed: 1.8,
+      bucketAngle: 0,   // -0.7 (lowered) to 0 (level) to 0.3 (raised)
+      liftHeight: 0,    // 0 to 1
+      carriedBrick: null,
+      collected: 0,
+    };
+
+    // ====== EXPERT AGENT ======
+    const STATES = {
+      SCANNING: 'SCANNING',
+      APPROACHING: 'APPROACHING',
+      LOWERING_BUCKET: 'LOWERING_BUCKET',
+      SCOOPING: 'SCOOPING',
+      LIFTING: 'LIFTING',
+      TRANSPORTING: 'TRANSPORTING',
+      DUMPING: 'DUMPING',
+      COMPLETE: 'COMPLETE',
+    };
+
+    const agent = {
+      state: STATES.SCANNING,
+      target: null,
+      targetBrickIndex: -1,
+      stateTimer: 0,
+      actions: { steering: 0, throttle: 0, bucket: 0, lift: 0 },
+    };
+
+    function findNearestBrick() {
+      let nearest = null;
+      let minDist = Infinity;
+      let nearestIdx = -1;
+
+      for (let i = 0; i < bricks.length; i++) {
+        if (bricks[i].userData.collected) continue;
+        const dx = bricks[i].position.x - loader.x;
+        const dz = bricks[i].position.z - loader.z;
+        const dist = Math.sqrt(dx * dx + dz * dz);
+        if (dist < minDist) {
+          minDist = dist;
+          nearest = bricks[i];
+          nearestIdx = i;
+        }
+      }
+      return { brick: nearest, dist: minDist, index: nearestIdx };
+    }
+
+    function angleDiff(target, current) {
+      let diff = target - current;
+      while (diff > Math.PI) diff -= 2 * Math.PI;
+      while (diff < -Math.PI) diff += 2 * Math.PI;
+      return diff;
+    }
+
+    function angleToTarget(tx, tz) {
+      return Math.atan2(tx - loader.x, tz - loader.z);
+    }
+
+    function distToTarget(tx, tz) {
+      const dx = tx - loader.x;
+      const dz = tz - loader.z;
+      return Math.sqrt(dx * dx + dz * dz);
+    }
+
+    function updateAgent(dt) {
+      agent.stateTimer += dt;
+      const a = agent.actions;
+
+      // Reset actions
+      a.steering = 0;
+      a.throttle = 0;
+      a.bucket = 0;
+      a.lift = 0;
+
+      switch (agent.state) {
+        case STATES.SCANNING: {
+          const result = findNearestBrick();
+          if (!result.brick) {
+            agent.state = STATES.COMPLETE;
+            break;
+          }
+          agent.target = result.brick;
+          agent.targetBrickIndex = result.index;
+          agent.state = STATES.APPROACHING;
+          agent.stateTimer = 0;
+
+          // Ensure bucket is level for approach
+          a.bucket = -loader.bucketAngle * 2; // return to level
+          break;
+        }
+
+        case STATES.APPROACHING: {
+          if (!agent.target || agent.target.userData.collected) {
+            agent.state = STATES.SCANNING;
+            break;
+          }
+
+          const targetAngle = angleToTarget(agent.target.position.x, agent.target.position.z);
+          const aDiff = angleDiff(targetAngle, loader.rotation);
+          const dist = distToTarget(agent.target.position.x, agent.target.position.z);
+
+          // Proportional steering (lesson learned: avoid oscillation)
+          a.steering = Math.max(-1, Math.min(1, aDiff / 1.0));
+
+          // Throttle: slow down as we approach
+          if (Math.abs(aDiff) > 0.8) {
+            // Need to turn more, slow down
+            a.throttle = 0.2;
+          } else {
+            a.throttle = Math.min(1.0, dist / 3.0);
+            a.throttle = Math.max(0.3, a.throttle);
+          }
+
+          // Close enough to start scooping
+          if (dist < 1.5) {
+            agent.state = STATES.LOWERING_BUCKET;
+            agent.stateTimer = 0;
+          }
+          break;
+        }
+
+        case STATES.LOWERING_BUCKET: {
+          // Lower bucket while slowing down
+          a.bucket = -1; // lower
+          a.throttle = 0.15;
+
+          // Keep steering toward target
+          if (agent.target && !agent.target.userData.collected) {
+            const targetAngle = angleToTarget(agent.target.position.x, agent.target.position.z);
+            const aDiff = angleDiff(targetAngle, loader.rotation);
+            a.steering = Math.max(-1, Math.min(1, aDiff / 0.8));
+          }
+
+          if (loader.bucketAngle <= -0.5) {
+            agent.state = STATES.SCOOPING;
+            agent.stateTimer = 0;
+          }
+          break;
+        }
+
+        case STATES.SCOOPING: {
+          // Drive forward slowly to scoop up the brick
+          a.throttle = 0.4;
+          a.bucket = 0; // hold position
+
+          if (agent.target && !agent.target.userData.collected) {
+            const targetAngle = angleToTarget(agent.target.position.x, agent.target.position.z);
+            const aDiff = angleDiff(targetAngle, loader.rotation);
+            a.steering = Math.max(-1, Math.min(1, aDiff / 0.6));
+          }
+
+          const dist = agent.target ? distToTarget(agent.target.position.x, agent.target.position.z) : 999;
+
+          // Check if we're close enough to "scoop" the brick
+          if (dist < 0.8 || agent.stateTimer > 2.0) {
+            if (agent.target && !agent.target.userData.collected) {
+              // Collect the brick
+              agent.target.userData.collected = true;
+              loader.carriedBrick = agent.target;
+
+              // Attach brick to bucket visually
+              scene.remove(agent.target);
+              agent.target.position.set(0, 0.1, 0.4);
+              agent.target.rotation.set(0, 0, 0);
+              agent.target.scale.set(0.5, 0.5, 0.5); // shrink for bucket
+              bucketPivot.add(agent.target);
+            }
+            agent.state = STATES.LIFTING;
+            agent.stateTimer = 0;
+          }
+          break;
+        }
+
+        case STATES.LIFTING: {
+          // Raise bucket
+          a.bucket = 1;
+          a.lift = 1;
+          a.throttle = 0;
+
+          if (loader.bucketAngle >= 0.2 && agent.stateTimer > 0.5) {
+            agent.state = STATES.TRANSPORTING;
+            agent.stateTimer = 0;
+          }
+          break;
+        }
+
+        case STATES.TRANSPORTING: {
+          // Drive to storage box
+          const targetAngle = angleToTarget(BOX_POS.x, BOX_POS.z);
+          const aDiff = angleDiff(targetAngle, loader.rotation);
+          const dist = distToTarget(BOX_POS.x, BOX_POS.z);
+
+          a.steering = Math.max(-1, Math.min(1, aDiff / 1.0));
+
+          if (Math.abs(aDiff) > 0.8) {
+            a.throttle = 0.25;
+          } else {
+            a.throttle = Math.min(1.0, dist / 3.0);
+            a.throttle = Math.max(0.3, a.throttle);
+          }
+
+          // Hold bucket up
+          a.bucket = 0;
+          a.lift = 0;
+
+          if (dist < 2.0) {
+            agent.state = STATES.DUMPING;
+            agent.stateTimer = 0;
+          }
+          break;
+        }
+
+        case STATES.DUMPING: {
+          // Stop and dump
+          a.throttle = 0;
+          a.bucket = 1; // tilt forward to dump
+          a.lift = -1;
+
+          if (agent.stateTimer > 0.8) {
+            // Remove carried brick from bucket
+            if (loader.carriedBrick) {
+              bucketPivot.remove(loader.carriedBrick);
+
+              // Add small brick to pile in box
+              addToBoxPile(loader.carriedBrick.userData.color);
+              loader.carriedBrick = null;
+              loader.collected++;
+            }
+
+            // Reset bucket
+            agent.state = STATES.SCANNING;
+            agent.stateTimer = 0;
+          }
+          break;
+        }
+
+        case STATES.COMPLETE: {
+          a.throttle = 0;
+          a.steering = 0;
+          break;
+        }
+      }
+
+      return a;
+    }
+
+    // ====== BOX PILE ======
+    const boxPileMeshes = [];
+
+    function addToBoxPile(color) {
+      const size = 0.12 + Math.random() * 0.08;
+      const mini = new THREE.Mesh(
+        new THREE.BoxGeometry(size, size * 0.6, size * 0.5),
+        new THREE.MeshStandardMaterial({ color, roughness: 0.3 })
+      );
+      const pileH = 0.15 + boxPileMeshes.length * 0.04;
+      mini.position.set(
+        BOX_POS.x + (Math.random() - 0.5) * 1.5,
+        Math.min(pileH, 1.5),
+        BOX_POS.z + (Math.random() - 0.5) * 1.2
+      );
+      mini.rotation.set(Math.random() * 0.5, Math.random() * Math.PI, Math.random() * 0.5);
+      mini.castShadow = true;
+      scene.add(mini);
+      boxPileMeshes.push(mini);
+    }
+
+    // ====== PHYSICS UPDATE ======
+    function updateLoader(dt, actions) {
+      // Apply steering (lesson learned: kinematic rotation control)
+      const turnAmount = actions.steering * loader.turnSpeed * dt;
+      loader.rotation += turnAmount;
+
+      // Apply throttle
+      const speed = actions.throttle * loader.maxSpeed;
+      loader.x += Math.sin(loader.rotation) * speed * dt;
+      loader.z += Math.cos(loader.rotation) * speed * dt;
+
+      // Clamp to room bounds
+      loader.x = Math.max(-7.5, Math.min(7.5, loader.x));
+      loader.z = Math.max(-7.5, Math.min(7.5, loader.z));
+
+      // Update bucket angle (lesson learned: explicit reset)
+      const bucketSpeed = 1.5;
+      loader.bucketAngle += actions.bucket * bucketSpeed * dt;
+      loader.bucketAngle = Math.max(-0.7, Math.min(0.5, loader.bucketAngle));
+
+      // Update lift height
+      const liftSpeed = 1.0;
+      loader.liftHeight += actions.lift * liftSpeed * dt;
+      loader.liftHeight = Math.max(0, Math.min(1, loader.liftHeight));
+
+      // Apply to Three.js objects (lesson learned: kinematic rotation)
+      loaderGroup.position.set(loader.x, 0, loader.z);
+      loaderGroup.rotation.y = loader.rotation;
+
+      // Bucket animation
+      if (bucketPivot) {
+        bucketPivot.rotation.x = loader.bucketAngle;
+        bucketPivot.position.y = 0.4 + loader.liftHeight * 0.5;
+      }
+    }
+
+    // ====== CAMERA UPDATE ======
+    const camState = {
+      followX: LOADER_START.x + 6,
+      followY: 8,
+      followZ: LOADER_START.z + 8,
+      lookX: LOADER_START.x,
+      lookZ: LOADER_START.z,
+    };
+
+    function updateCameras(dt) {
+      // Follow camera (lerp for smoothness, lesson learned: init at target)
+      const behindDist = 7;
+      const behindHeight = 5;
+      const targetCamX = loader.x - Math.sin(loader.rotation) * behindDist;
+      const targetCamZ = loader.z - Math.cos(loader.rotation) * behindDist;
+
+      const lerpFactor = 1 - Math.pow(0.02, dt);
+      camState.followX += (targetCamX - camState.followX) * lerpFactor;
+      camState.followY += (behindHeight - camState.followY) * lerpFactor;
+      camState.followZ += (targetCamZ - camState.followZ) * lerpFactor;
+      camState.lookX += (loader.x - camState.lookX) * lerpFactor * 1.5;
+      camState.lookZ += (loader.z - camState.lookZ) * lerpFactor * 1.5;
+
+      followCam.position.set(camState.followX, camState.followY, camState.followZ);
+      followCam.up.set(0, 1, 0); // lesson learned: fix up vector
+      followCam.lookAt(camState.lookX, 0.5, camState.lookZ);
+
+      // Ego camera (1st person from loader)
+      const egoX = loader.x + Math.sin(loader.rotation) * 0.5;
+      const egoZ = loader.z + Math.cos(loader.rotation) * 0.5;
+      egoCam.position.set(egoX, 1.3, egoZ);
+      egoCam.up.set(0, 1, 0);
+      const lookAheadX = loader.x + Math.sin(loader.rotation) * 5;
+      const lookAheadZ = loader.z + Math.cos(loader.rotation) * 5;
+      egoCam.lookAt(lookAheadX, 0.3, lookAheadZ);
+
+      // Bird's eye (follows loader from directly above)
+      birdCam.position.set(loader.x, 14, loader.z);
+      birdCam.up.set(0, 0, -1);
+      birdCam.lookAt(loader.x, 0, loader.z);
+
+      // Side camera (perpendicular to loader heading, always to the right)
+      const sideOffsetX = Math.cos(loader.rotation) * 6;
+      const sideOffsetZ = -Math.sin(loader.rotation) * 6;
+      sideCam.position.set(loader.x + sideOffsetX, 3, loader.z + sideOffsetZ);
+      sideCam.up.set(0, 1, 0);
+      sideCam.lookAt(loader.x, 0.5, loader.z);
+
+      // Front-angle camera (ahead of loader, looking back at it)
+      const aheadX = loader.x + Math.sin(loader.rotation) * 5;
+      const aheadZ = loader.z + Math.cos(loader.rotation) * 5;
+      frontCam.position.set(aheadX, 2.5, aheadZ);
+      frontCam.up.set(0, 1, 0);
+      frontCam.lookAt(loader.x, 0.3, loader.z);
+    }
+
+    // ====== DATA RECORDING ======
+    const actionLog = [];
+    let frameCount = 0;
+
+    function recordFrame(actions) {
+      actionLog.push({
+        frame: frameCount,
+        time: frameCount * SIM_DT,
+        state: agent.state,
+        loader: {
+          x: +loader.x.toFixed(3),
+          z: +loader.z.toFixed(3),
+          rotation: +loader.rotation.toFixed(4),
+          bucketAngle: +loader.bucketAngle.toFixed(3),
+          liftHeight: +loader.liftHeight.toFixed(3),
+        },
+        actions: {
+          steering: +actions.steering.toFixed(4),
+          throttle: +actions.throttle.toFixed(4),
+          bucket: +actions.bucket.toFixed(4),
+          lift: +actions.lift.toFixed(4),
+        },
+        remaining: bricks.filter(b => !b.userData.collected).length,
+        collected: loader.collected,
+      });
+    }
+
+    // ====== VIDEO RECORDING ======
+    let mediaRecorder = null;
+    let recordedChunks = [];
+
+    function startRecording() {
+      const stream = renderer.domElement.captureStream(30);
+      mediaRecorder = new MediaRecorder(stream, {
+        mimeType: 'video/webm;codecs=vp9',
+        videoBitsPerSecond: 5000000,
+      });
+
+      mediaRecorder.ondataavailable = (e) => {
+        if (e.data.size > 0) recordedChunks.push(e.data);
+      };
+
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(recordedChunks, { type: 'video/webm' });
+        const url = URL.createObjectURL(blob);
+
+        const downloadBtn = document.getElementById('download-btn');
+        downloadBtn.style.display = 'block';
+        downloadBtn.onclick = () => {
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `loader-cleanup-${Date.now()}.webm`;
+          a.click();
+        };
+
+        // Also auto-download
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `loader-cleanup-${Date.now()}.webm`;
+        a.click();
+      };
+
+      mediaRecorder.start();
+    }
+
+    function stopRecording() {
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+      }
+    }
+
+    // ====== HUD UPDATE ======
+    function updateHUD(actions) {
+      document.getElementById('agent-state').textContent = agent.state;
+      document.getElementById('legos-remaining').textContent = bricks.filter(b => !b.userData.collected).length;
+      document.getElementById('legos-collected').textContent = loader.collected;
+      document.getElementById('frame-count').textContent = frameCount;
+
+      if (actions) {
+        document.getElementById('action-display').innerHTML =
+          `steering: ${actions.steering.toFixed(2)}<br>` +
+          `throttle: ${actions.throttle.toFixed(2)}<br>` +
+          `bucket: ${actions.bucket.toFixed(2)}<br>` +
+          `lift: ${actions.lift.toFixed(2)}`;
+      }
+    }
+
+    // ====== PARTICLES ======
+    const particles = [];
+
+    function spawnParticles(position, color, count = 8) {
+      const mat = new THREE.MeshBasicMaterial({ color });
+      for (let i = 0; i < count; i++) {
+        const size = 0.03 + Math.random() * 0.06;
+        const p = new THREE.Mesh(new THREE.BoxGeometry(size, size, size), mat.clone());
+        p.position.copy(position);
+        const angle = Math.random() * Math.PI * 2;
+        p.userData.vel = new THREE.Vector3(
+          Math.cos(angle) * (2 + Math.random() * 3),
+          3 + Math.random() * 4,
+          Math.sin(angle) * (2 + Math.random() * 3)
+        );
+        p.userData.life = 0.5 + Math.random() * 0.3;
+        p.userData.age = 0;
+        scene.add(p);
+        particles.push(p);
+      }
+    }
+
+    function updateParticles(dt) {
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.userData.age += dt;
+        if (p.userData.age >= p.userData.life) {
+          scene.remove(p);
+          p.geometry.dispose();
+          p.material.dispose();
+          particles.splice(i, 1);
+          continue;
+        }
+        p.userData.vel.y -= 12 * dt;
+        p.position.addScaledVector(p.userData.vel, dt);
+        p.rotation.x += dt * 5;
+        const fade = 1 - p.userData.age / p.userData.life;
+        p.material.opacity = fade;
+        p.material.transparent = true;
+        p.scale.setScalar(fade);
+      }
+    }
+
+    // ====== DUST MOTES ======
+    const dustMotes = [];
+    function createDustMotes() {
+      const dustMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.3 });
+      const dustGeo = new THREE.SphereGeometry(0.02, 4, 4);
+      for (let i = 0; i < 40; i++) {
+        const m = new THREE.Mesh(dustGeo, dustMat.clone());
+        m.position.set(
+          (Math.random() - 0.5) * 14,
+          0.5 + Math.random() * 5,
+          (Math.random() - 0.5) * 14
+        );
+        m.userData.baseY = m.position.y;
+        m.userData.phase = Math.random() * Math.PI * 2;
+        m.userData.speed = 0.2 + Math.random() * 0.3;
+        scene.add(m);
+        dustMotes.push(m);
+      }
+    }
+
+    function updateDustMotes(time) {
+      dustMotes.forEach(m => {
+        m.position.y = m.userData.baseY + Math.sin(time * m.userData.speed + m.userData.phase) * 0.3;
+      });
+    }
+
+    // ====== INIT ======
+    createRoom();
+    scatterBricks(LEGO_COUNT);
+    createLoader();
+    createDustMotes();
+
+    // Init cameras at loader position (lesson learned)
+    camState.followX = LOADER_START.x + 6;
+    camState.followZ = LOADER_START.z + 8;
+    camState.lookX = LOADER_START.x;
+    camState.lookZ = LOADER_START.z;
+
+    // ====== MAIN LOOP ======
+    let simTime = 0;
+    let running = true;
+    let started = false;
+
+    function animate() {
+      if (!running) return;
+      requestAnimationFrame(animate);
+
+      const dt = SIM_DT;
+      simTime += dt;
+      frameCount++;
+
+      // Start recording on first frame
+      if (!started) {
+        started = true;
+        startRecording();
+      }
+
+      // Update agent
+      const actions = updateAgent(dt);
+
+      // Update physics
+      updateLoader(dt, actions);
+
+      // Update cameras
+      updateCameras(dt);
+
+      // Record data
+      recordFrame(actions);
+
+      // Particles
+      updateParticles(dt);
+      updateDustMotes(simTime);
+
+      // Check for brick collection particles
+      if (agent.state === STATES.SCOOPING && agent.target && !agent.target.userData.collected) {
+        const dist = distToTarget(agent.target.position.x, agent.target.position.z);
+        if (dist < 0.8) {
+          spawnParticles(agent.target.position, agent.target.userData.color);
+        }
+      }
+
+      // Render main (follow) view
+      renderer.render(scene, followCam);
+
+      // Render mini views (4 sub-cameras)
+      egoRenderer.render(scene, egoCam);
+      birdRenderer.render(scene, birdCam);
+      sideRenderer.render(scene, sideCam);
+      frontRenderer.render(scene, frontCam);
+
+      // Update HUD
+      updateHUD(actions);
+
+      // Check completion
+      if (agent.state === STATES.COMPLETE) {
+        setTimeout(() => {
+          running = false;
+          stopRecording();
+
+          // Save action log
+          const logBlob = new Blob([JSON.stringify(actionLog, null, 2)], { type: 'application/json' });
+          const logUrl = URL.createObjectURL(logBlob);
+          const logLink = document.createElement('a');
+          logLink.href = logUrl;
+          logLink.download = `actions-${Date.now()}.jsonl`;
+          logLink.click();
+
+          // Show complete screen
+          const totalTime = (frameCount * SIM_DT).toFixed(1);
+          document.getElementById('complete-stats').innerHTML =
+            `Collected: ${loader.collected} / ${LEGO_COUNT} legos<br>` +
+            `Time: ${totalTime}s (${frameCount} frames)<br>` +
+            `Action log saved (${actionLog.length} entries)`;
+          document.getElementById('complete-screen').style.display = 'flex';
+          document.getElementById('recording-indicator').style.display = 'none';
+        }, 1000); // 1s delay to show last state
+      }
+    }
+
+    // Handle resize
+    window.addEventListener('resize', () => {
+      followCam.aspect = window.innerWidth / window.innerHeight;
+      followCam.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // Start
+    animate();
+  </script>
+</body>
+</html>

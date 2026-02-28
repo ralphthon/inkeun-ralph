@@ -191,3 +191,81 @@ gs://ralphton-handoff/
 - ❌ 버킷에 업로드 없이 DONE 보고
 - ❌ 1920x1080 해상도로 배치 생성 (OOM 위험)
 - ❌ lessons-learned 교훈 무시
+
+---
+
+## 부록: Lessons Learned 상세 (cowshed-simulator에서)
+
+> 체크리스트만으로 부족할 때 아래 상세 내용을 참조. 증상→원인→해결 코드가 포함되어 있다.
+
+### LL-1. 물리엔진 회전 관성 미제어 → 피치/롤 회전
+
+증상: 로더가 피치/롤로 기울어지며 영상 흔들림. 시간이 지날수록 심해짐.
+
+```javascript
+// ✅ 매 프레임 yaw만 적용, 피치/롤 강제 0 고정
+loader.body.quaternion.setFromEuler(0, loader.rotation, 0);
+loader.body.angularVelocity.set(0, 0, 0);  // 물리 회전 관성 제거
+```
+
+> 차량형 시뮬레이션에서 물리엔진은 이동만 맡기고, 회전은 직접 제어하라.
+
+### LL-2. CANNON vs THREE setFromEuler() API 차이
+
+```javascript
+// ❌ THREE.Quaternion.setFromEuler(0, 0, 0) — 숫자 3개 넣으면 경고
+// ✅ THREE: setFromEuler(new THREE.Euler(0, 0, 0))
+// ✅ CANNON: setFromEuler(x, y, z) — 숫자 3개 OK
+loader.mesh.quaternion.copy(loader.body.quaternion);  // 가장 안전
+```
+
+### LL-3. 액션 전환 시 잔존 속도/회전
+
+```javascript
+// ❌ forward 시 angularVelocity 미초기화 → turn 잔존값으로 계속 회전
+// ✅ 모든 액션에서 관련 변수 명시적 리셋
+case ACTIONS.FORWARD:
+    loader.velocity = speed;
+    loader.angularVelocity = 0;  // ← 반드시
+    break;
+case ACTIONS.TURN_RIGHT:
+    loader.angularVelocity = turnSpeed;
+    loader.velocity = 0;          // ← 반드시
+    break;
+```
+
+### LL-4. 이산 액션 좌우 진동 (Oscillation)
+
+원인: 회전속도(2.5 rad/s) 대비 임계값(0.2 rad)이 작아 2-3프레임에 목표각 초과 → 반복
+해결: `threshold > 2 × angular_speed × dt`, 비례 조향 `steerAmount = angleDiff / 1.2`
+
+### LL-5. 카메라 초기 위치 미설정 → 시작 시 스윙
+
+```javascript
+// ✅ 시나리오 시작 시 모든 카메라를 로더 위치 기준으로 초기화
+initCamerasAtLoader(cameraManager, loader);
+```
+
+> lerp 기반 추적 카메라는 초기값이 멀면 시작 수 초가 학습 데이터로 쓸모없어짐.
+
+### LL-6. camera.up 벡터 미고정 → 롤 회전
+
+```javascript
+camera.up.set(0, 1, 0);  // 매 프레임 up 벡터 강제 고정
+camera.lookAt(target);
+// birds_eye는 up = (0, 0, -1) 등 별도 지정
+```
+
+### LL-7. headless-gl GLTF 제한
+
+- headless-gl = WebGL 1.0 → bone texture, SRGB, WebGL 2.0 기능 미지원
+- DRACOLoader: `self is not defined` (Web Worker 의존)
+- SkinnedMesh: 렌더링 안 될 수 있음
+- ✅ BoxGeometry 기반 또는 Draco 미사용 GLB만 사용
+- ✅ `fs.readFileSync → ArrayBuffer → GLTFLoader.parse()` 방식
+
+### LL-8. 1920x1080 렌더링 OOM Kill
+
+- 5시점 Full HD → FFmpeg 인코딩 시 메모리 폭발
+- ✅ 학습용 640x480 (ACT 모델 입력 224x224)
+- ✅ Full HD는 데모용 단일 시점만

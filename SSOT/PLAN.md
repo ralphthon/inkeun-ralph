@@ -49,7 +49,7 @@ initial trigger를 하면 이 레포를 살펴보고 각 VM에게 `SSOT/{에이�
 
 ### 역할별 행동 규칙
 
-**Watcher (지휘자, GPT-4o)**
+**Watcher (지휘자, GPT-5.2 Pro)**
 - Phase 타임라인에 따라 각 에이전트에게 작업 지시
 - 10분마다 진행 상황 체크 (`@Developer 상태 보고해`)
 - BLOCKED 수신 시 대안 제시 또는 다른 에이전트에게 지원 요청
@@ -212,8 +212,10 @@ DomainExpert → Developer: REQUEST + gs://ralphton-handoff/scenarios/ (추가 �
 
 ## 사전 조건 (Phase 0) — 20:00 전 완료
 
-- [ ] **OpenClaw 듀얼 시스템 세팅 확인** — developer/watcher VM에 OpenClaw 동작 여부
-- [ ] **Discord 봇 연결 확인** — 채팅방에서 두 봇이 대화 가능한지
+- [x] **OpenClaw 듀얼 시스템 세팅 확인** — developer/watcher VM에 OpenClaw 동작 확인 완료
+- [x] **Discord 봇 연결 확인** — Developer-Claw + Watcher-Claw 대화 정상 동작 확인
+- [x] **knowledge-hub-vm → watcher VM 전체 전송** — openclaw, obsidian 등 14개 프로젝트 + 설정 파일 GCS 경유 전송 완료
+- [x] **Watcher 모델 업그레이드** — GPT-4o → GPT-5.2 Pro (OpenAI SOTA) 적용 완료
 - [ ] **레퍼런스 게임 VM 전송** — lego-cleanup-game.html을 developer VM에 배치
 - [ ] **Node.js + headless-gl 환경 확인** — developer VM에서 headless 렌더링 가능 여부
 

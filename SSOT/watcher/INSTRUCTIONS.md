@@ -2,7 +2,7 @@
 
 > **역할**: 전체 파이프라인 지휘, 타임라인 관리, Phase 전환 판단, 장애 대응
 > **VM**: ralphton-watcher (n2-standard-8, asia-northeast3-a)
-> **모델**: GPT-4o (Codex)
+> **모델**: GPT-5.2 Pro
 
 ---
 

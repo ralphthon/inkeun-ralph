@@ -8,6 +8,14 @@
 
 set -euo pipefail
 
+# --- PATH 설정 (cron 환경에서 gcloud 등 필요) ---
+export PATH="/opt/homebrew/share/google-cloud-sdk/bin:/opt/homebrew/bin:/usr/local/bin:$PATH"
+
+# gcloud SDK 환경 로드
+if [ -f "/opt/homebrew/share/google-cloud-sdk/path.bash.inc" ]; then
+  source "/opt/homebrew/share/google-cloud-sdk/path.bash.inc"
+fi
+
 # --- 설정 ---
 PROJECT="ralphton"
 LOG_DIR="/Users/inkeun/projects/ralphton/logs"
@@ -293,6 +301,15 @@ main() {
 
     elif [ "$vm_status" = "STAGING" ] || [ "$vm_status" = "PROVISIONING" ]; then
       log "${vm_name}: VM=${vm_status} (시작 중, 다음 체크에서 확인)"
+
+    elif [ "$vm_status" = "ERROR" ]; then
+      # gcloud 명령 실패 또는 실제 VM ERROR — 복구 시도
+      all_ok=false
+      log_alert "${vm_name}: 상태 확인 실패 (${vm_status}) → VM 시작 시도"
+      start_vm "$vm_name" "$zone" && {
+        restart_agent_process "$vm_name" "$zone" "$restart_cmd"
+        revived_count=$((revived_count + 1))
+      } || true
 
     else
       all_ok=false

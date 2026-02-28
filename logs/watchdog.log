@@ -110,3 +110,145 @@
 [2026-02-28 20:15:00 KST] ⚠️  ralphton-a100: VM 상태 비정상 (ERROR)
 [2026-02-28 20:15:00 KST] ⚠️  ralphton-evaluator: VM 상태 비정상 (ERROR)
 [2026-02-28 20:15:00 KST] ========== 이상 감지 — 복구 0건 수행 ==========
+[2026-02-28 20:18:00 KST] ========== Watchdog 실행 시작 ==========
+[2026-02-28 20:18:00 KST] ⚠️  ralphton-watcher: VM 상태 비정상 (ERROR)
+[2026-02-28 20:18:00 KST] ⚠️  ralphton-developer: VM 상태 비정상 (ERROR)
+[2026-02-28 20:18:00 KST] ⚠️  ralphton-domain-expert: VM 상태 비정상 (ERROR)
+[2026-02-28 20:18:00 KST] ⚠️  ralphton-a100: VM 상태 비정상 (ERROR)
+[2026-02-28 20:18:00 KST] ⚠️  ralphton-evaluator: VM 상태 비정상 (ERROR)
+[2026-02-28 20:18:00 KST] ========== 이상 감지 — 복구 0건 수행 ==========
+[2026-02-28 20:21:01 KST] ========== Watchdog 실행 시작 ==========
+[2026-02-28 20:21:01 KST] ⚠️  ralphton-watcher: VM 상태 비정상 (ERROR)
+[2026-02-28 20:21:01 KST] ⚠️  ralphton-developer: VM 상태 비정상 (ERROR)
+[2026-02-28 20:21:01 KST] ⚠️  ralphton-domain-expert: VM 상태 비정상 (ERROR)
+[2026-02-28 20:21:01 KST] ⚠️  ralphton-a100: VM 상태 비정상 (ERROR)
+[2026-02-28 20:21:01 KST] ⚠️  ralphton-evaluator: VM 상태 비정상 (ERROR)
+[2026-02-28 20:21:01 KST] ========== 이상 감지 — 복구 0건 수행 ==========
+[2026-02-28 20:24:00 KST] ========== Watchdog 실행 시작 ==========
+[2026-02-28 20:24:00 KST] ⚠️  ralphton-watcher: VM 상태 비정상 (ERROR)
+[2026-02-28 20:24:00 KST] ⚠️  ralphton-developer: VM 상태 비정상 (ERROR)
+[2026-02-28 20:24:00 KST] ⚠️  ralphton-domain-expert: VM 상태 비정상 (ERROR)
+[2026-02-28 20:24:00 KST] ⚠️  ralphton-a100: VM 상태 비정상 (ERROR)
+[2026-02-28 20:24:00 KST] ⚠️  ralphton-evaluator: VM 상태 비정상 (ERROR)
+[2026-02-28 20:24:00 KST] ========== 이상 감지 — 복구 0건 수행 ==========
+[2026-02-28 20:27:00 KST] ========== Watchdog 실행 시작 ==========
+[2026-02-28 20:27:00 KST] ⚠️  ralphton-watcher: VM 상태 비정상 (ERROR)
+[2026-02-28 20:27:00 KST] ⚠️  ralphton-developer: VM 상태 비정상 (ERROR)
+[2026-02-28 20:27:00 KST] ⚠️  ralphton-domain-expert: VM 상태 비정상 (ERROR)
+[2026-02-28 20:27:00 KST] ⚠️  ralphton-a100: VM 상태 비정상 (ERROR)
+[2026-02-28 20:27:00 KST] ⚠️  ralphton-evaluator: VM 상태 비정상 (ERROR)
+[2026-02-28 20:27:00 KST] ========== 이상 감지 — 복구 0건 수행 ==========
+[2026-02-28 20:29:36 KST] ========== Watchdog 실행 시작 ==========
+[2026-02-28 20:29:38 KST] ✅ ralphton-watcher: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:29:43 KST] ✅ ralphton-developer: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:29:47 KST] ✅ ralphton-domain-expert: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:29:49 KST] ⚠️  ralphton-a100: VM=TERMINATED → 자동 시작
+[2026-02-28 20:29:49 KST] 🔄 VM 시작 중: ralphton-a100 (us-central1-a)
+Starting instance(s) ralphton-a100...
+[2026-02-28 20:30:00 KST] ========== Watchdog 실행 시작 ==========
+[2026-02-28 20:30:05 KST] ✅ ralphton-watcher: VM=RUNNING, Agent=ALIVE
+...............................................................................done.
+Updated [https://compute.googleapis.com/compute/v1/projects/ralphton/zones/us-central1-a/instances/ralphton-a100].
+Instance internal IP is 10.128.0.2
+Instance external IP is 34.28.13.254
+[2026-02-28 20:30:08 KST] ✅ VM 시작 성공: ralphton-a100
+[2026-02-28 20:30:12 KST] ✅ ralphton-developer: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:30:20 KST] ✅ ralphton-domain-expert: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:30:30 KST] ⚠️  ralphton-a100: VM=RUNNING, SSH 접속 실패 → VM 재시작 시도
+[2026-02-28 20:30:38 KST] 🔄 에이전트 프로세스 재시작 중: ralphton-a100
+ssh: connect to host 34.28.13.254 port 22: Operation timed out
+
+Recommendation: To check for possible causes of SSH connectivity issues and get
+recommendations, rerun the ssh command with the --troubleshoot option.
+
+gcloud compute ssh ralphton-a100 --project=ralphton --zone=us-central1-a --troubleshoot
+
+Or, to investigate an IAP tunneling issue:
+
+gcloud compute ssh ralphton-a100 --project=ralphton --zone=us-central1-a --troubleshoot --tunnel-through-iap
+
+ERROR: (gcloud.compute.ssh) [/usr/bin/ssh] exited with return code [255].
+Updated [https://www.googleapis.com/compute/v1/projects/ralphton/zones/us-central1-a/instances/ralphton-a100].
+[2026-02-28 20:31:34 KST] ✅ ralphton-evaluator: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:31:48 KST] ========== 이상 감지 — 복구 1건 수행 ==========
+[2026-02-28 20:33:00 KST] ========== Watchdog 실행 시작 ==========
+[2026-02-28 20:33:05 KST] ✅ ralphton-watcher: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:33:12 KST] ✅ ralphton-developer: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:33:18 KST] ✅ ralphton-domain-expert: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:33:28 KST] ✅ ralphton-a100: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:33:38 KST] ✅ ralphton-evaluator: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:33:49 KST] ========== 전체 정상 (5/5 VM, 5/5 Agent) ==========
+[2026-02-28 20:36:00 KST] ========== Watchdog 실행 시작 ==========
+[2026-02-28 20:36:05 KST] ✅ ralphton-watcher: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:36:12 KST] ✅ ralphton-developer: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:36:18 KST] ✅ ralphton-domain-expert: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:36:28 KST] ✅ ralphton-a100: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:36:38 KST] ✅ ralphton-evaluator: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:36:49 KST] ========== 전체 정상 (5/5 VM, 5/5 Agent) ==========
+[2026-02-28 20:39:00 KST] ========== Watchdog 실행 시작 ==========
+[2026-02-28 20:39:05 KST] ✅ ralphton-watcher: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:39:12 KST] ✅ ralphton-developer: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:39:20 KST] ✅ ralphton-domain-expert: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:39:30 KST] ✅ ralphton-a100: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:39:42 KST] ✅ ralphton-evaluator: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:39:54 KST] ========== 전체 정상 (5/5 VM, 5/5 Agent) ==========
+[2026-02-28 20:42:00 KST] ========== Watchdog 실행 시작 ==========
+[2026-02-28 20:42:04 KST] ✅ ralphton-watcher: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:42:12 KST] ✅ ralphton-developer: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:42:19 KST] ✅ ralphton-domain-expert: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:42:29 KST] ✅ ralphton-a100: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:42:38 KST] ✅ ralphton-evaluator: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:42:52 KST] ========== 전체 정상 (5/5 VM, 5/5 Agent) ==========
+[2026-02-28 20:45:00 KST] ========== Watchdog 실행 시작 ==========
+[2026-02-28 20:45:05 KST] ✅ ralphton-watcher: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:45:13 KST] ✅ ralphton-developer: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:45:20 KST] ✅ ralphton-domain-expert: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:45:31 KST] ✅ ralphton-a100: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:45:41 KST] ✅ ralphton-evaluator: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:45:51 KST] ========== 전체 정상 (5/5 VM, 5/5 Agent) ==========
+[2026-02-28 20:48:01 KST] ========== Watchdog 실행 시작 ==========
+[2026-02-28 20:48:06 KST] ✅ ralphton-watcher: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:48:13 KST] ✅ ralphton-developer: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:48:21 KST] ✅ ralphton-domain-expert: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:48:33 KST] ✅ ralphton-a100: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:48:43 KST] ✅ ralphton-evaluator: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:48:55 KST] ========== 전체 정상 (5/5 VM, 5/5 Agent) ==========
+[2026-02-28 20:51:00 KST] ========== Watchdog 실행 시작 ==========
+[2026-02-28 20:51:05 KST] ✅ ralphton-watcher: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:51:13 KST] ✅ ralphton-developer: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:51:21 KST] ✅ ralphton-domain-expert: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:51:32 KST] ✅ ralphton-a100: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:51:42 KST] ✅ ralphton-evaluator: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:51:54 KST] ========== 전체 정상 (5/5 VM, 5/5 Agent) ==========
+[2026-02-28 20:54:00 KST] ========== Watchdog 실행 시작 ==========
+[2026-02-28 20:54:05 KST] ✅ ralphton-watcher: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:54:13 KST] ✅ ralphton-developer: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:54:21 KST] ✅ ralphton-domain-expert: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:54:32 KST] ✅ ralphton-a100: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:54:44 KST] ✅ ralphton-evaluator: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:54:56 KST] ========== 전체 정상 (5/5 VM, 5/5 Agent) ==========
+[2026-02-28 20:57:00 KST] ========== Watchdog 실행 시작 ==========
+[2026-02-28 20:57:05 KST] ✅ ralphton-watcher: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:57:12 KST] ✅ ralphton-developer: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:57:19 KST] ✅ ralphton-domain-expert: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:57:30 KST] ✅ ralphton-a100: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:57:40 KST] ✅ ralphton-evaluator: VM=RUNNING, Agent=ALIVE
+[2026-02-28 20:57:50 KST] ========== 전체 정상 (5/5 VM, 5/5 Agent) ==========
+[2026-02-28 21:00:00 KST] ========== Watchdog 실행 시작 ==========
+[2026-02-28 21:00:05 KST] ✅ ralphton-watcher: VM=RUNNING, Agent=ALIVE
+[2026-02-28 21:00:12 KST] ✅ ralphton-developer: VM=RUNNING, Agent=ALIVE
+[2026-02-28 21:00:20 KST] ✅ ralphton-domain-expert: VM=RUNNING, Agent=ALIVE
+[2026-02-28 21:00:32 KST] ✅ ralphton-a100: VM=RUNNING, Agent=ALIVE
+[2026-02-28 21:00:43 KST] ✅ ralphton-evaluator: VM=RUNNING, Agent=ALIVE
+[2026-02-28 21:00:55 KST] ========== 전체 정상 (5/5 VM, 5/5 Agent) ==========
+[2026-02-28 21:03:00 KST] ========== Watchdog 실행 시작 ==========
+[2026-02-28 21:03:05 KST] ✅ ralphton-watcher: VM=RUNNING, Agent=ALIVE
+[2026-02-28 21:03:13 KST] ✅ ralphton-developer: VM=RUNNING, Agent=ALIVE
+[2026-02-28 21:03:20 KST] ✅ ralphton-domain-expert: VM=RUNNING, Agent=ALIVE
+[2026-02-28 21:03:32 KST] ✅ ralphton-a100: VM=RUNNING, Agent=ALIVE
+[2026-02-28 21:03:43 KST] ✅ ralphton-evaluator: VM=RUNNING, Agent=ALIVE
+[2026-02-28 21:03:57 KST] ========== 전체 정상 (5/5 VM, 5/5 Agent) ==========
+[2026-02-28 21:06:00 KST] ========== Watchdog 실행 시작 ==========
+[2026-02-28 21:06:05 KST] ✅ ralphton-watcher: VM=RUNNING, Agent=ALIVE
+[2026-02-28 21:06:13 KST] ✅ ralphton-developer: VM=RUNNING, Agent=ALIVE
+[2026-02-28 21:06:20 KST] ✅ ralphton-domain-expert: VM=RUNNING, Agent=ALIVE

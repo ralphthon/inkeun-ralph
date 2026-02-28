@@ -1,0 +1,130 @@
+[2026-02-28 20:39:54 KST] ========== CCD Watchdog 실행 시작 ==========
+[2026-02-28 20:39:58 KST] VM 상태 수집 완료
+[2026-02-28 20:39:58 KST] Claude Code 실행 시작 (model: sonnet)
+[2026-02-28 20:39:58 KST] Claude Code 실행 완료
+Error: Claude Code cannot be launched inside another Claude Code session.
+Nested sessions share runtime resources and will crash all active sessions.
+To bypass this check, unset the CLAUDECODE environment variable.
+[2026-02-28 20:39:58 KST] ========== CCD Watchdog 실행 완료 ==========
+[2026-02-28 20:40:00 KST] ========== CCD Watchdog 실행 시작 ==========
+[2026-02-28 20:40:09 KST] VM 상태 수집 완료
+[2026-02-28 20:40:09 KST] Claude Code 실행 시작 (model: sonnet)
+[2026-02-28 20:40:13 KST] 이전 CCD Watchdog 실행 중 (PID: 10419). 건너뜀.
+[2026-02-28 20:40:15 KST] Claude Code 실행 완료
+Not logged in · Please run /login
+[2026-02-28 20:40:15 KST] ========== CCD Watchdog 실행 완료 ==========
+[2026-02-28 20:40:39 KST] ========== CCD Watchdog 실행 시작 ==========
+[2026-02-28 20:40:43 KST] VM 상태 수집 완료
+[2026-02-28 20:40:43 KST] Claude Code 실행 시작 (model: sonnet)
+[2026-02-28 20:40 KST] === CCD Watchdog 보고 ===
+[2026-02-28 20:40 KST] [INFO] VM 상태: 5개 모두 RUNNING
+[2026-02-28 20:40 KST] [INFO] GCP 프로젝트 오류(kubony→ralphton) 수정 완료
+[2026-02-28 20:40 KST] [OK] Watcher VM: openclaw-gateway PID=5121 실행 중
+[2026-02-28 20:40 KST] [WARN] Developer/DomainExpert/A100/Evaluator: SSH 예산 부족으로 미확인
+[2026-02-28 20:40 KST] [INFO] Discord 확인: 예산 부족으로 생략
+[2026-02-28 20:40 KST] === CCD Watchdog 완료 ===
+[2026-02-28 20:41:36 KST] Claude Code 실행 완료
+Error: Exceeded USD budget (0.5)
+[2026-02-28 20:41:36 KST] ========== CCD Watchdog 실행 완료 ==========
+[2026-02-28 20:41:55 KST] ========== CCD Watchdog 실행 시작 ==========
+[2026-02-28 20:42:00 KST] VM 상태 수집 완료
+[2026-02-28 20:42:00 KST] Claude Code 실행 시작 (model: sonnet)
+[2026-02-28 20:41 KST] CCD Watchdog 점검 시작
+[2026-02-28 20:41 KST] VM 상태: 5/5 RUNNING (watcher, developer, domain-expert, evaluator, a100)
+[2026-02-28 20:41 KST] openclaw 프로세스: 5/5 정상 실행
+[2026-02-28 20:41 KST] Discord 활성 에이전트: Watcher(3분), Developer(4분), DomainExpert(1분), Evaluation(3분)
+[2026-02-28 20:41 KST] ⚠️  Training 42분 침묵 감지 → Discord REQUEST 전송
+[2026-02-28 20:41 KST] Loop 1 완료: DomainExpert 시나리오 13개, 성공률 70%, HDF5 업로드 완료
+[2026-02-28 20:41 KST] CCD Watchdog 점검 완료 (복구 필요 없음)
+[2026-02-28 20:46:01 KST] Claude Code 실행 완료
+---
+
+## Watchdog 점검 완료 보고 (20:41 KST)
+
+### Step 1: VM 상태
+5/5 모두 RUNNING — 복구 불필요
+
+### Step 2: openclaw 프로세스
+5/5 VM 모두 정상 실행 중 (각 VM에서 PID 확인)
+
+### Step 3: Discord 활동 현황
+
+| 에이전트 | 마지막 활동 | 상태 |
+|---|---|---|
+| Watcher | 3분 전 | Loop 2 지시 중 |
+| Developer | 4분 전 | SSOT 재확인 완료 |
+| DomainExpert | 1분 전 | 시나리오 13개 완료 |
+| Evaluation | 3분 전 | Loop 1 검증 완료 |
+| **Training** | **42분 전** | **⚠️ 침묵** |
+
+**현재 진행**: Loop 1 완료, Loop 2 데이터 준비 중
+- 성공률 70% (ep000, ep001)
+- HDF5 업로드 완료
+- DomainExpert가 action-rich 시나리오 13개 방금 생성
+
+### Step 4: 트리거 전송
+Training에게 Discord `<@1477243247956066414>` 멘션으로 상태 보고 요청 전송 완료
+
+### Step 5: 기록
+- `progress/STATUS.md` 업데이트 완료
+- `logs/ccd-watchdog.log` 기록 완료
+
+**전반적으로 파이프라인은 정상 진행 중. Training만 침묵 상태이며 트리거 전송됨.**
+[2026-02-28 20:46:01 KST] ========== CCD Watchdog 실행 완료 ==========
+[2026-02-28 20:50:00 KST] ========== CCD Watchdog 실행 시작 ==========
+[2026-02-28 20:50:10 KST] VM 상태 수집 완료
+[2026-02-28 20:50:10 KST] Claude Code 실행 시작 (model: sonnet)
+[2026-02-28 20:50:17 KST] Claude Code 실행 완료
+Not logged in · Please run /login
+[2026-02-28 20:50:17 KST] ========== CCD Watchdog 실행 완료 ==========
+[2026-02-28 20:55:00 KST] ========== CCD Watchdog 실행 시작 ==========
+[2026-02-28 20:55:11 KST] VM 상태 수집 완료
+[2026-02-28 20:55:11 KST] Claude Code 실행 시작 (model: sonnet)
+[2026-02-28 20:55:17 KST] Claude Code 실행 완료
+Not logged in · Please run /login
+[2026-02-28 20:55:17 KST] ========== CCD Watchdog 실행 완료 ==========
+[2026-02-28 20:57:59 KST] ========== CCD Watchdog 실행 시작 ==========
+[2026-02-28 20:58:04 KST] VM 상태 수집 완료
+[2026-02-28 20:58:04 KST] Claude Code 실행 시작 (model: sonnet)
+[2026-02-28 21:00:53 KST] CCD Watchdog 실행 완료
+  - VM 상태: 5/5 RUNNING
+  - openclaw 프로세스: 5/5 정상
+  - Discord 마지막 메시지: 20:46 KST (Watcher)
+  - 조치: Developer 18분 침묵 → REQUEST 트리거 전송
+  - Training: 이전 침묵 해소됨 (GPU idle, 정상 대기)
+[2026-02-28 21:01:14 KST] Claude Code 실행 완료
+---
+
+## Watchdog 실행 보고 (20:57 KST)
+
+### Step 1: VM 상태 ✅
+모든 VM 5/5 RUNNING (사전 확인 그대로)
+
+### Step 2: openclaw 프로세스 ✅
+SSH 직접 확인 결과 전원 정상:
+- Watcher: PID 5121, 9353 RUNNING
+- Developer: PID 5499, 11585 RUNNING
+- DomainExpert: PID 1536, 4111 RUNNING
+- Evaluator: PID 1484, 4275 RUNNING
+- A100: PID 851, 3105 RUNNING
+
+### Step 3: Discord 최근 활동 확인
+25분간 메시지 확인 결과:
+- **Watcher**: 20:46 활성 (Loop 2 지시 전달)
+- **Training**: 20:45-46 복귀 응답 (GPU idle, 대기 중 정상)
+- **DomainExpert**: 20:42 완료 (시나리오 13개 생성)
+- **Evaluation**: 20:40 완료 (Loop 1 검증 통과)
+- **Developer**: 20:39 마지막 → **18분 침묵** ⚠️ (Watcher Loop 2 지시 미응답)
+
+### Step 4: 트리거 조치
+- Developer에게 REQUEST 메시지 전송 (`<@1477168971718332516>`)
+- 배치 생성 시작 여부 + BLOCKED 사유 확인 요청
+
+### Step 5: STATUS.md 업데이트 ✅
+
+**전반적 판단**: 파이프라인 흐름은 정상. Training이 이전 침묵을 해소했고, Developer가 Loop 2 배치 생성에 착수하면 Training이 즉시 학습 시작 가능한 상태. Developer 응답 후 다음 루프 정상화 예상.
+[2026-02-28 21:01:14 KST] ========== CCD Watchdog 실행 완료 ==========
+[2026-02-28 21:05:00 KST] [BACKUP] ========== Backup CCD Watchdog 실행 시작 (API Key) ==========
+[2026-02-28 21:05:14 KST] [BACKUP] VM 상태 수집 완료
+[2026-02-28 21:05:14 KST] [BACKUP] Claude Code 실행 시작 (API Key, model: sonnet)
+[2026-02-28 21:06:14 KST] 이전 CCD Watchdog 실행 중 (PID: 23316). 건너뜀.

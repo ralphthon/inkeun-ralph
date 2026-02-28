@@ -4,6 +4,22 @@
 
 5개 AI 에이전트가 각각 GCP VM에서 Discord를 통해 협업하며, 축사 로더 시뮬레이터 구축 → 학습 데이터 생성 → ACT 모델 훈련을 자율적으로 수행한다.
 
+## D2E 논문 기반
+
+이 프로젝트는 **[D2E: Scaling Vision-Action Pretraining on Desktop Data for Transfer to Embodied AI](https://worv-ai.github.io/d2e/)** (ICLR 2026) 논문의 방법론을 축사 로더 도메인에 적용한다.
+
+[![D2E Pipeline Overview](example-data/d2e-teaser.png)](https://worv-ai.github.io/d2e/)
+
+D2E의 핵심 아이디어:
+
+- **데스크톱 데이터 → 로봇 AI**: 대규모 언어 모델이 인터넷 텍스트를 활용하듯, 데스크톱 상호작용(게임 등)을 로봇 학습의 사전학습 데이터로 활용
+- **OWA Toolkit**: 31개 게임에서 335.6시간 데이터 수집, 152배 압축률
+- **Generalist-IDM**: 다양한 환경에서 제로샷 일반화, YouTube 1,000시간+ 의사 라벨링
+- **Vision-Action Pretraining (VAPT)**: 데스크톱 사전학습 표현을 물리적 작업으로 전이
+- **성과**: LIBERO 조작 96.6%, CANVAS 네비게이션 83.3%, SO101 실제 로봇 80% 성공률
+
+Ralphton은 이 파이프라인을 **축사 로더 시뮬레이터**에 적용하여, 시뮬레이션 데이터로 사전학습한 뒤 실제 농업 로봇으로 전이하는 것을 목표로 한다.
+
 ## 프로젝트 개요
 
 VLA/IL 모델 학습을 위한 합성 비디오 데이터 생성 파이프라인.

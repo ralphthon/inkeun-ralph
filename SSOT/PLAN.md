@@ -246,8 +246,8 @@ DomainExpert → Developer: REQUEST + gs://ralphton-handoff/scenarios/ (추가 �
 - [x] **Discord 봇 연결 확인** — Developer-Claw + Watcher-Claw 대화 정상 동작 확인
 - [x] **knowledge-hub-vm → watcher VM 전체 전송** — openclaw, obsidian 등 14개 프로젝트 + 설정 파일 GCS 경유 전송 완료
 - [x] **Watcher 모델 업그레이드** — GPT-4o → GPT-5.2 Pro (OpenAI SOTA) 적용 완료
-- [ ] **레퍼런스 게임 VM 전송** — lego-cleanup-game.html을 developer VM에 배치
-- [ ] **Node.js + headless-gl 환경 확인** — developer VM에서 headless 렌더링 가능 여부
+- [x] **레퍼런스 게임 VM 전송** — lego-cleanup-game.html을 developer VM에 배치
+- [x] **Node.js + headless-gl 환경 확인** — developer VM에서 headless 렌더링 가능 여부
 
 ---
 
@@ -291,29 +291,39 @@ DomainExpert → Developer: REQUEST + gs://ralphton-handoff/scenarios/ (추가 �
 
 ---
 
-## Phase 2: 배치 생성 + LeRobot 변환 — 22:00~23:30
+## Phase 2: 대규모 배치 생성 + LeRobot 변환 — 22:00~02:00
 
-**목표**: 시나리오 50~100개 배치 생성 + LeRobot HDF5 변환
+**목표**: DomainExpert 시나리오 대량 생산 + **1000 에피소드** 배치 생성 + LeRobot HDF5 변환
 
-### 2a. 배치 생성 시작 (22:00~22:30)
-- 시나리오 랜덤화: 레고 개수(10~50), 위치, 색상, 방 레이아웃
+### 2a. 시나리오 대량 생산 + 배치 생성 시작 (22:00~23:00)
+- DomainExpert가 FMEA 기반 시나리오 **200~300종** 생성
+  - 레고 개수(10~50), 위치, 색상, 방 레이아웃 조합
+  - Tier 1~3 고장모드 커버, Domain Randomization 적용
 - 배치 스크립트 실행 (xvfb-run 백그라운드)
   ```bash
-  nohup xvfb-run node batch-generate.js --count 100 > batch.log 2>&1 &
+  nohup xvfb-run node batch-generate.js --count 1000 > batch.log 2>&1 &
   ```
-- 처음 5개 시나리오 생성 확인 후 백그라운드 전환
+- 시나리오 1종당 에피소드 3~5개 (Expert Agent 미세 변동으로 다양성 확보)
+- 처음 10개 에피소드 품질 확인 후 풀 스케일 전환
 
-### 2b. LeRobot 변환 (22:30~23:00)
+### 2b. LeRobot 변환 (23:00~00:00)
 - 생성된 시나리오의 비디오(MP4) + 액션(JSONL) → LeRobot HDF5 + Parquet
 - 변환기 구현 또는 기존 변환기 활용
-- 샘플 5개 검증 (프레임 동기화, 액션 범위)
+- 샘플 10개 검증 (프레임 동기화, 액션 범위)
+- 변환 파이프라인을 스트리밍으로 구성: 생성 완료된 에피소드부터 순차 변환
 
-### 2c. 데이터 품질 검증 + A100 전송 (23:00~23:30)
-- 프레임 수 일치 확인 (비디오 프레임 == 액션 타임스텝)
+### 2c. 데이터 품질 검증 + A100 전송 (00:00~01:00)
+- Evaluation 에이전트가 프레임 수 일치 확인 (비디오 프레임 == 액션 타임스텝)
 - 액션 분포 시각화 (steering, throttle, bucket, lift)
-- 데이터를 A100 VM으로 scp 전송
+- 불량 에피소드 자동 필터링 + DomainExpert에게 피드백
+- 검증 통과분부터 A100 VM으로 스트리밍 전송
 
-**성공 기준**: 최소 50개 에피소드가 LeRobot HDF5로 변환되고, A100 VM에 전송됨
+### 2d. 추가 배치 + 피드백 루프 (01:00~02:00)
+- Evaluation 피드백 기반으로 DomainExpert가 시나리오 보강
+- 부족한 에지케이스 집중 생성
+- 목표 1000 에피소드 달성까지 지속 생성
+
+**성공 기준**: **1000 에피소드**가 LeRobot HDF5로 변환되고, A100 VM에 전송됨
 
 **의존**: Phase 1 (시뮬레이터 완성)
 

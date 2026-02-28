@@ -190,7 +190,7 @@ DomainExpert → Developer: REQUEST + gs://ralphton-handoff/scenarios/ (추가 �
 - **실행 환경**: GCP VM 기반 (로컬 아님)
 - **자율 실행**: 5-에이전트 체제 (Watcher + DomainExpert + Developer + Training + Evaluation) + Discord + GCS 버킷
 - **데이터**: 비디오 + 연속 액션 데이터 (JSONL) 필수 — 비디오만으론 부족
-- **에지케이스**: AI 추천으로 생성 (FMEA 파이프라인은 미구축)
+- **에지케이스**: FMEA(Failure Mode and Effects Analysis) 방법론 기반 체계적 식별 — SPS(Simulation Priority Score) = (Severity × Occurrence) / Implementation Difficulty로 우선순위 결정. 32개 고장모드 식별, Tier 1~3 분류 완료
 - **게임 퀄리티**: 3D 애셋 참조로 향상
 
 ---

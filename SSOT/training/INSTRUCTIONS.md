@@ -1,15 +1,40 @@
 # Training — 학습 에이전트
 
 > **역할**: LeRobot 데이터 변환 검증, ACT 모델 학습, checkpoint 관리
-> **VM**: ralphton-a100 (A100 40GB Spot, us-central1-a)
+> **VM**: ralphton-a100 (A100 40GB Standard, us-central1-a)
 
 ---
 
 ## 핵심 원칙
 
 - **너는 모델을 학습시킨다.** Developer가 생성한 데이터를 검증하고 ACT 학습을 수행한다.
-- Spot 인스턴스 선점에 대비하여 **빈번한 checkpoint 저장**이 필수다.
+- Standard 인스턴스이므로 선점 위험은 없으나, 안전을 위해 **주기적 checkpoint 저장**을 유지한다.
 - 학습 진행 상황을 주기적으로 Watcher에게 REPORT한다.
+
+---
+
+## 공유 버킷
+
+- **버킷**: `gs://ralphton-handoff` (asia-northeast3)
+- **CLI**: 반드시 `gcloud storage` 사용 (`gsutil` 금지 — scope 캐시 문제)
+
+**Training이 읽는 경로:**
+- `gs://ralphton-handoff/dataset/` — LeRobot HDF5 데이터
+- `gs://ralphton-handoff/ssot/` — PLAN.md (학습 config 참조)
+
+**Training이 쓰는 경로:**
+- `gs://ralphton-handoff/checkpoints/act_epoch_{NNN}/` — 학습 checkpoint
+- `gs://ralphton-handoff/checkpoints/act_best/` — best loss checkpoint
+- `gs://ralphton-handoff/checkpoints/loss_curve.png` — 학습 곡선
+
+**다운로드/업로드 명령:**
+```bash
+# 데이터 다운로드
+gcloud storage cp -r gs://ralphton-handoff/dataset/ ~/dataset/
+
+# checkpoint 업로드
+gcloud storage cp -r ./checkpoints/epoch_050/ gs://ralphton-handoff/checkpoints/act_epoch_050/
+```
 
 ---
 
@@ -57,7 +82,7 @@ training:
   lr: 1e-4
   epochs: 500
   seed: 42
-  save_checkpoint_every: 50         # 50 epoch마다 (Spot 선점 대비)
+  save_checkpoint_every: 50         # 50 epoch마다
 
 model:
   backbone: resnet18
@@ -102,7 +127,7 @@ observation:
 - **저장 주기**: 50 epoch마다
 - **저장 경로**: `gs://ralphton-handoff/checkpoints/act_epoch_{NNN}/`
 - **보존 정책**: 최근 3개 checkpoint + best loss checkpoint
-- **Spot 선점 대비**: 매 checkpoint마다 즉시 GCS 업로드
+- **안전 백업**: 매 checkpoint마다 GCS 업로드
 
 ```bash
 # checkpoint 업로드
@@ -139,9 +164,9 @@ Epoch: 500
 
 ---
 
-## Spot 선점 복구
+## 장애 복구
 
-A100 Spot이 선점되면:
+VM이 예기치 않게 중지된 경우:
 1. VM 재시작: `gcloud compute instances start ralphton-a100 --project=ralphton --zone=us-central1-a`
 2. 최신 checkpoint 확인: `gcloud storage ls gs://ralphton-handoff/checkpoints/`
 3. checkpoint에서 학습 재개

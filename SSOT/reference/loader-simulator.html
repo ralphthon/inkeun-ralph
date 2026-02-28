@@ -304,7 +304,7 @@
     followCam.lookAt(LOADER_START);
 
     // Ego camera (loader 1st person)
-    const egoCam = new THREE.PerspectiveCamera(70, 240 / 180, 0.1, 100);
+    const egoCam = new THREE.PerspectiveCamera(70, MINI_W / MINI_H, 0.1, 100);
 
     // Bird's eye camera
     const birdCam = new THREE.PerspectiveCamera(60, MINI_W / MINI_H, 0.1, 100);
@@ -1207,6 +1207,7 @@
           document.getElementById('complete-stats').innerHTML =
             `Collected: ${loader.collected} / ${LEGO_COUNT} legos<br>` +
             `Time: ${totalTime}s (${frameCount} frames)<br>` +
+            `Cameras: 5 (follow, ego, bird_eye, side, front)<br>` +
             `Action log saved (${actionLog.length} entries)`;
           document.getElementById('complete-screen').style.display = 'flex';
           document.getElementById('recording-indicator').style.display = 'none';

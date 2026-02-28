@@ -13,6 +13,25 @@
 
 ---
 
+## 공유 버킷
+
+- **버킷**: `gs://ralphton-handoff` (asia-northeast3)
+- **CLI**: 반드시 `gcloud storage` 사용 (`gsutil` 금지 — scope 캐시 문제)
+
+**DomainExpert가 읽는 경로:**
+- `gs://ralphton-handoff/ssot/` — PLAN.md, 레퍼런스
+- `gs://ralphton-handoff/reports/` — Evaluation의 실패 패턴 분석
+
+**DomainExpert가 쓰는 경로:**
+- `gs://ralphton-handoff/scenarios/batch_v{N}/` — 시나리오 JSON config + manifest
+
+**업로드 명령:**
+```bash
+gcloud storage cp -r ~/scenarios/batch_v1/ gs://ralphton-handoff/scenarios/batch_v1/
+```
+
+---
+
 ## 시나리오 분포 (목표)
 
 - **일반 케이스 (50%)**: 바닥 줍기 기본, 순차 수거, 단순 이동 후 수거

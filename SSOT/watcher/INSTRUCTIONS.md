@@ -14,6 +14,30 @@
 
 ---
 
+## 공유 버킷
+
+- **버킷**: `gs://ralphton-handoff` (asia-northeast3)
+- **CLI**: 반드시 `gcloud storage` 사용 (`gsutil` 금지 — scope 캐시 문제)
+
+**디렉토리 구조:**
+```
+gs://ralphton-handoff/
+├── ssot/                    ← PLAN.md, 레퍼런스 (initial trigger 시 업로드)
+├── scenarios/               ← DomainExpert 산출물
+├── episodes/                ← Developer 산출물 (시뮬레이션 비디오+액션)
+├── dataset/                 ← Developer 산출물 (LeRobot HDF5)
+├── checkpoints/             ← Training 산출물
+├── reports/                 ← Evaluation 산출물
+└── logs/                    ← 각 에이전트 작업 로그
+```
+
+**Watcher의 버킷 권한:**
+- 모든 디렉토리 읽기 (산출물 존재 여부 확인)
+- `ssot/` 쓰기 (SSOT 업데이트)
+- DONE 수신 시 `gcloud storage ls` 로 산출물 실재 여부 반드시 확인
+
+---
+
 ## 타임라인 (마스터)
 
 - **20:00~22:00** — Phase 1: Developer에게 시뮬레이터 구축 지시
@@ -59,7 +83,7 @@ INSTRUCTIONS: SSOT/developer/INSTRUCTIONS.md 참조.
 
 **대안 경로 예시:**
 - headless-gl 실패 → Puppeteer headless Chrome으로 전환 지시
-- A100 Spot 선점 → checkpoint에서 재개 지시
+- A100 장애 발생 → checkpoint에서 재개 지시 (Standard 인스턴스로 선점 위험 없음)
 - 배치 생성 느림 → 목표 에피소드 수 축소 (100→50)
 
 ### 5. 피드백 루프 관리

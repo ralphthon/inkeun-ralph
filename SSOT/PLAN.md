@@ -13,7 +13,7 @@ VM들은 모두 디스코드에서 대화를 할거야.
 **Watcher VM** (n2-standard-8, asia-northeast3-a) → 지휘자. 타임라인 관리, Phase 전환, 장애 대응
 **DomainExpert VM** (n2-standard-4, asia-northeast3-a) → 도메인 지식 기반 롱테일 식별 및 시나리오 JSON config 생성
 **Developer VM** (n2-standard-8, asia-northeast3-a) → 시뮬레이터 개발, headless 렌더링, 배치 비디오 생성
-**Training VM** = ralphton-a100 (A100 40GB Spot, us-central1-a) → LeRobot 변환 + ACT 학습 + checkpoint 관리
+**Training VM** = ralphton-a100 (A100 40GB Standard, us-central1-a) → LeRobot 변환 + ACT 학습 + checkpoint 관리
 **Evaluation VM** (n2-standard-4, asia-northeast3-a) → 데이터 품질 검증, 모델 평가, 피드백 루프 생성
 
 initial trigger를 하면 이 레포를 살펴보고 각 VM에게 `SSOT/{에이전트명}/INSTRUCTIONS.md`를 전송한다.
@@ -143,14 +143,14 @@ DomainExpert → Developer: REQUEST + gs://ralphton-handoff/scenarios/ (추가 �
 - **데이터 출력**: 다시점 비디오(MP4) + 연속 액션(JSONL) → LeRobot HDF5 → ACT 학습
 
 레퍼런스 게임에서 재활용하는 것:
-- 방 환경 (바닥, 벽, 창문, 가구)
+- 방 환경 (바닥, 가구) — **벽은 제거** (카메라 시야 차단으로 학습 데이터 품질 저하)
 - 레고 블록 생성 (크기/색상/분포)
 - Three.js 렌더링 파이프라인
 
 새로 만들어야 하는 것:
-- 로더 모델 + cannon-es 물리
-- Expert Agent (상태 머신: 스캔→접근→수거→운반→배치)
-- 다시점 카메라 시스템 (ego, birds_eye, follow)
+- 로더 모델 + kinematic 물리 (cannon-es 불필요 — 회전은 직접 제어)
+- Expert Agent (상태 머신: SCANNING→APPROACHING→LOWERING_BUCKET→SCOOPING→LIFTING→TRANSPORTING→DUMPING)
+- 다시점 카메라 시스템 5개 (ego, birds_eye, follow, side, front)
 - headless 렌더링 (xvfb-run + headless-gl)
 - 액션 데이터 기록기 (매 프레임 JSONL)
 
@@ -158,46 +158,34 @@ DomainExpert → Developer: REQUEST + gs://ralphton-handoff/scenarios/ (추가 �
 
 ## 인프라 현황
 
-- **ralphton-a100** (us-central1-a) — A100 40GB Spot, **TERMINATED**
+- **ralphton-a100** (us-central1-a) — A100 40GB Standard, **RUNNING** (34.28.13.254)
   - SSH: `gcloud compute ssh ralphton-a100 --project=ralphton --zone=us-central1-a`
   - PyTorch 2.7, CUDA 12.8
-  - 용도: ACT 학습 (Phase 3)
+  - 용도: Training 에이전트 — ACT 학습 (Phase 3)
 
 - **ralphton-developer** (asia-northeast3-a) — n2-standard-8, **RUNNING** (34.47.121.197)
-  - 용도: 개발자 OpenClaw (Claude) + 시뮬레이터 배치 생성
   - SSH: `gcloud compute ssh ralphton-developer --project=ralphton --zone=asia-northeast3-a`
+  - 용도: Developer 에이전트 — 시뮬레이터 개발 + 배치 생성
 
 - **ralphton-watcher** (asia-northeast3-a) — n2-standard-8, **RUNNING** (34.158.215.255)
-  - 용도: 감시자 OpenClaw (Codex)
   - SSH: `gcloud compute ssh ralphton-watcher --project=ralphton --zone=asia-northeast3-a`
+  - 용도: Watcher 에이전트 — 지휘자
 
-- **ralphton-domain-expert** (asia-northeast3-a) — n2-standard-4, **미생성**
-  - 용도: 도메인 전문가 에이전트 — 시나리오 생성 + 에지케이스 식별
+- **ralphton-domain-expert** (asia-northeast3-a) — n2-standard-4, **RUNNING** (34.64.156.85)
   - SSH: `gcloud compute ssh ralphton-domain-expert --project=ralphton --zone=asia-northeast3-a`
-  - 생성 명령:
-    ```bash
-    gcloud compute instances create ralphton-domain-expert \
-      --project=ralphton --zone=asia-northeast3-a \
-      --machine-type=n2-standard-4 --boot-disk-size=50GB \
-      --image-family=ubuntu-2204-lts --image-project=ubuntu-os-cloud
-    ```
+  - 용도: DomainExpert 에이전트 — 시나리오 생성 + 에지케이스 식별
 
-- **ralphton-evaluator** (asia-northeast3-a) — n2-standard-4, **미생성**
-  - 용도: 평가 에이전트 — 데이터 검증 + 모델 평가 + 피드백 루프
+- **ralphton-evaluator** (asia-northeast3-a) — n2-standard-4, **RUNNING** (34.50.12.35)
   - SSH: `gcloud compute ssh ralphton-evaluator --project=ralphton --zone=asia-northeast3-a`
-  - 생성 명령:
-    ```bash
-    gcloud compute instances create ralphton-evaluator \
-      --project=ralphton --zone=asia-northeast3-a \
-      --machine-type=n2-standard-4 --boot-disk-size=50GB \
-      --image-family=ubuntu-2204-lts --image-project=ubuntu-os-cloud
-    ```
+  - 용도: Evaluation 에이전트 — 데이터 검증 + 모델 평가 + 피드백
 
 ---
 
 ## 핵심 결정사항
 
 - **시뮬레이터**: 레고 치우기 게임 레퍼런스 기반, 로더가 자율 수거
+- **벽 제거**: 벽이 카메라 시야를 가려 학습 데이터 품질이 떨어짐 → 바닥+가구+수납함만 유지, 벽/창문/포스터/걸레받이/책장 제거
+- **카메라 5시점**: follow(3인칭), ego(1인칭), birds_eye(탑다운), side(측면), front(정면) — 다양한 시점이 ACT 학습에 유리
 - **모델**: ACT 우선 (VLA는 학습 시간 이슈, 추후 확장)
 - **실행 환경**: GCP VM 기반 (로컬 아님)
 - **자율 실행**: 5-에이전트 체제 (Watcher + DomainExpert + Developer + Training + Evaluation) + Discord + GCS 버킷
@@ -236,13 +224,14 @@ DomainExpert → Developer: REQUEST + gs://ralphton-handoff/scenarios/ (추가 �
 **목표**: 레퍼런스 게임을 기반으로 로더 자율 수거 시뮬레이터 완성
 
 ### 1a. 환경 변환 (20:00~20:30)
-- 레퍼런스 게임의 방+레고 환경을 headless Node.js로 포팅
-- Three.js + headless-gl + cannon-es 세팅
+- 레퍼런스 게임의 바닥+가구+레고 환경을 headless Node.js로 포팅
+- **벽/창문/포스터/걸레받이/책장 제거** — 카메라 시야 차단 방지
+- Three.js + headless-gl 세팅 (cannon-es 불필요)
 - 브라우저 의존성 제거 (OrbitControls, DOM 등)
 
 ### 1b. 로더 구현 (20:30~21:00)
 - 로더 모델 (BoxGeometry 기반 또는 GLB)
-- cannon-es 물리 바디 (kinematic 회전 제어)
+- kinematic 회전 제어 (물리엔진에 회전을 맡기지 않음)
 - 액션 공간: steering(-1~1), throttle(-1~1), bucket(-1~1), lift(-1~1)
 - lessons-learned 교훈 모두 적용
 
@@ -252,14 +241,19 @@ DomainExpert → Developer: REQUEST + gs://ralphton-handoff/scenarios/ (추가 �
 - 연속 액션 출력 (매 프레임)
 
 ### 1d. 데이터 기록 + 다시점 카메라 (21:30~22:00)
-- 카메라: ego(로더 시점), birds_eye(천장), follow(3인칭)
+- 카메라 5시점:
+  - **follow**: 로더 뒤에서 따라가는 3인칭
+  - **ego**: 로더 1인칭 시점 (로더가 보는 것)
+  - **birds_eye**: 로더 바로 위에서 내려보는 탑다운
+  - **side**: 로더 진행방향의 수직 측면뷰
+  - **front**: 로더 앞에서 뒤를 돌아보는 정면뷰
 - 매 프레임 기록:
-  - 비디오: 3시점 PNG → FFmpeg MP4
+  - 비디오: 5시점 PNG → FFmpeg MP4
   - 액션: steering, throttle, bucket, lift (JSONL)
   - 상태: 로더 위치/방향, 남은 레고, 수거 레고
 - 메타데이터: metadata.json (시나리오 설정, 결과)
 
-**성공 기준**: 1개 에피소드가 headless로 완주되고, 3시점 비디오 + 액션 JSONL이 동기화되어 저장됨
+**성공 기준**: 1개 에피소드가 headless로 완주되고, 5시점 비디오 + 액션 JSONL이 동기화되어 저장됨
 
 **의존**: Phase 0 (VM 환경)
 
@@ -310,7 +304,7 @@ DomainExpert → Developer: REQUEST + gs://ralphton-handoff/scenarios/ (추가 �
 
 ### 3b. 파일럿 학습 (00:00~02:00)
 - 현재까지 생성된 에피소드로 ACT 학습 시작
-- checkpoint 주기: 50 epoch마다 (Spot 선점 대비)
+- checkpoint 주기: 50 epoch마다
 - loss 커브 모니터링 (wandb 또는 텐서보드)
 
 ### 3c. 평가 + 추가 학습 (02:00~03:00)
@@ -322,7 +316,7 @@ DomainExpert → Developer: REQUEST + gs://ralphton-handoff/scenarios/ (추가 �
 
 **의존**: Phase 2 (LeRobot 데이터), A100 VM 정상 동작
 
-**리스크**: Spot 인스턴스 선점 → checkpoint에서 재개
+**리스크**: Standard 인스턴스로 선점 위험 없음. 비용 관리 주의.
 
 ---
 

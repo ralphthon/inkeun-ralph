@@ -14,6 +14,26 @@
 
 ---
 
+## 공유 버킷
+
+- **버킷**: `gs://ralphton-handoff` (asia-northeast3)
+- **CLI**: 반드시 `gcloud storage` 사용 (`gsutil` 금지 — scope 캐시 문제)
+
+**Developer가 읽는 경로:**
+- `gs://ralphton-handoff/ssot/` — PLAN.md, 레퍼런스 파일
+- `gs://ralphton-handoff/scenarios/` — DomainExpert의 시나리오 JSON config
+
+**Developer가 쓰는 경로:**
+- `gs://ralphton-handoff/episodes/episode_{NNN}/` — 시뮬레이션 산출물 (MP4+JSONL+metadata)
+- `gs://ralphton-handoff/dataset/` — LeRobot HDF5 변환 결과
+
+**업로드 명령:**
+```bash
+gcloud storage cp -r ~/output/episode_001/ gs://ralphton-handoff/episodes/episode_001/
+```
+
+---
+
 ## 시뮬레이터 아키텍처
 
 ```

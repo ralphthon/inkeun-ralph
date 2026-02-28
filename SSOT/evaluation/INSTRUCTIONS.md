@@ -13,6 +13,30 @@
 
 ---
 
+## 공유 버킷
+
+- **버킷**: `gs://ralphton-handoff` (asia-northeast3)
+- **CLI**: 반드시 `gcloud storage` 사용 (`gsutil` 금지 — scope 캐시 문제)
+
+**Evaluation이 읽는 경로:**
+- `gs://ralphton-handoff/episodes/` — Developer의 시뮬레이션 산출물
+- `gs://ralphton-handoff/dataset/` — LeRobot 변환 데이터
+- `gs://ralphton-handoff/checkpoints/` — Training의 학습 checkpoint
+
+**Evaluation이 쓰는 경로:**
+- `gs://ralphton-handoff/reports/` — 품질 리포트, 실패 분석, 최종 평가
+
+**다운로드/업로드 명령:**
+```bash
+# checkpoint 다운로드
+gcloud storage cp -r gs://ralphton-handoff/checkpoints/act_best/ ~/checkpoints/
+
+# 리포트 업로드
+gcloud storage cp ~/reports/data_quality_v1.json gs://ralphton-handoff/reports/
+```
+
+---
+
 ## 워크플로우
 
 ```

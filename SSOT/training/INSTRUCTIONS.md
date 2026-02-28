@@ -180,3 +180,32 @@ VM이 예기치 않게 중지된 경우:
 - ❌ checkpoint 없이 장시간 학습 (50 epoch 이상)
 - ❌ SSOT 파일 직접 수정
 - ❌ 학습 하이퍼파라미터를 Watcher 승인 없이 변경
+
+---
+
+## 부록: 데이터 포맷 변환 스펙
+
+### 시뮬레이터 출력 → LeRobot 입력 매핑
+
+```
+시뮬레이터 출력              →     LeRobot 학습 입력
+─────────────                    ──────────
+ego.mp4 (640x480)           →    observation.images.ego (224x224 리사이즈)
+actions.jsonl                →    action (4 DoF: steering, throttle, bucket, lift)
+loader_x/z/rotation in JSONL →    observation.state (proprioception)
+metadata.json                →    episode metadata
+```
+
+### JSONL → LeRobot HDF5 변환 시 주의
+
+- 프레임 번호 0-indexed 확인
+- 액션 값 범위 [-1.0, 1.0] 정규화 확인
+- 이미지: MP4에서 프레임 추출 → numpy array → HDF5
+- fps 동기화: 비디오 fps == JSONL 기록 fps (30fps)
+
+### 향후 확장 (10 DoF 로봇 팔)
+
+현재 4DoF 로더에서 검증 후, 10DoF 로봇 팔로 확장 예정:
+- action_dim: 4 → 10 (base 3 + arm 6 + gripper 1)
+- camera_names: [ego] → [ego, wrist]
+- ACT config의 action_dim, camera_names만 변경하면 됨

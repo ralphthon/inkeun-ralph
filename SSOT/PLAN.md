@@ -386,13 +386,22 @@ DomainExpert → Developer: REQUEST + gs://ralphton-handoff/scenarios/ (추가 �
 ## 참고 문서
 
 - `SSOT/reference/lego-cleanup-game.html` — 레퍼런스 게임 (Three.js 방+레고)
-- `simulation-plan.md` — D2E 프레임워크 전체 방법론
-- `hackathon-plan.md` — OpenClaw 듀얼 시스템 아키텍처
-- `lessons-learned.md` — 시뮬레이터 기술 교훈 8가지
-- Obsidian 참조:
-  - [[20260228 랄프톤 오픈클로와 텔레그램으로 작성한 계획]]
-  - [[20260228 랄프톤 모델선정가이드]]
-  - [[20260228 랄프톤 학습데이터 생성시 주의할점]]
+- `SSOT/reference/loader-simulator.html` — 로더 시뮬레이터 레퍼런스
+- `SSOT/developer/INSTRUCTIONS.md` — 시뮬레이터 스펙 + Lessons Learned 상세 (구 lessons-learned.md 통합)
+- `SSOT/domain-expert/INSTRUCTIONS.md` — 롱테일 시나리오 카탈로그 (구 simulation-plan.md 시나리오 섹션 통합)
+- `SSOT/training/INSTRUCTIONS.md` — 데이터 포맷 변환 스펙 (구 simulation-plan.md 학습 섹션 통합)
+
+**이론적 기반:**
+- D2E (WoRV AI, 2025) — Desktop to Embodied AI (https://worv-ai.github.io/d2e/)
+- ACT (Zhao et al., 2023) — Action Chunking + Transformer
+- OpenVLA (Kim et al., 2024) — Vision-Language-Action 7B
+- LeRobot (HuggingFace, 2024) — 오픈소스 로봇 학습 프레임워크
+- Domain Randomization (Tobin et al., 2017)
+
+**Obsidian 참조:**
+- [[20260228 랄프톤 오픈클로와 텔레그램으로 작성한 계획]]
+- [[20260228 랄프톤 모델선정가이드]]
+- [[20260228 랄프톤 학습데이터 생성시 주의할점]]
 
 ---
 

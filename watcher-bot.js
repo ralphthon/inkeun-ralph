@@ -1,4 +1,4 @@
-const { createBot } = require('./claw-bot');
+const { createBot, auditMentions } = require('./claw-bot');
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
@@ -211,6 +211,28 @@ async function main() {
     writeStatusFile();
     gitAutoCommit();
   }, 5 * 60 * 1000);
+
+  // 10분마다 멘션 누락 감시
+  setInterval(async () => {
+    try {
+      const violations = await auditMentions(bot.channel, 30);
+      if (violations.length > 0) {
+        console.warn(`[Watcher] ⚠️ 멘션 누락 ${violations.length}건 감지:`);
+        violations.forEach(v => {
+          console.warn(`  - ${v.author}: ${v.content}`);
+        });
+        // Discord에 경고 전송
+        await bot.send(
+          `[WATCHDOG] ⚠️ 최근 메시지 중 멘션 누락 ${violations.length}건 감지.\n` +
+          `멘션 없는 메시지는 상대방에게 알림이 가지 않습니다.\n` +
+          `반드시 \`<@ID>\` 형식으로 멘션을 포함하세요.\n` +
+          `위반자: ${violations.map(v => v.author).join(', ')}`
+        );
+      }
+    } catch (e) {
+      console.error('[Watcher] 멘션 감사 실패:', e.message);
+    }
+  }, 10 * 60 * 1000);
 
   // 첫 STATUS.md 생성
   writeStatusFile();

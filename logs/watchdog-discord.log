@@ -102,3 +102,528 @@
 [2026-02-28 20:29:49 KST] VM 시작 중: ralphton-a100 (us-central1-a)
 [2026-02-28 20:30:30 KST] ralphton-a100: VM=RUNNING, SSH 접속 실패 → VM 재시작 시도
 [2026-02-28 20:30:38 KST] 에이전트 프로세스 재시작 중: ralphton-a100
+[2026-03-01 00:24:02 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:24:02 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 00:24:03 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 00:24:04 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:24:04 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 00:24:06 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 00:24:07 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:24:07 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 00:24:08 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 00:24:10 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:24:10 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 00:24:11 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 00:24:13 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:24:13 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 00:24:14 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 00:27:01 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:27:01 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 00:27:03 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 00:27:04 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:27:04 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 00:27:06 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 00:27:07 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:27:07 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 00:27:09 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 00:27:11 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:27:11 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 00:27:13 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 00:27:14 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:27:14 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 00:27:16 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 00:30:02 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:30:02 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 00:30:04 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 00:30:06 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:30:06 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 00:30:08 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 00:30:11 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:30:11 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 00:30:13 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 00:30:16 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:30:16 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 00:30:17 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 00:30:19 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:30:19 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 00:30:21 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 00:33:01 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:33:01 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 00:33:03 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 00:33:04 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:33:04 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 00:33:06 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 00:33:07 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:33:07 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 00:33:09 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 00:33:10 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:33:10 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 00:33:12 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 00:33:13 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:33:13 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 00:33:15 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 00:36:02 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:36:02 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 00:36:04 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 00:36:05 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:36:05 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 00:36:07 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 00:36:08 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:36:08 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 00:36:10 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 00:36:11 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:36:11 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 00:36:13 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 00:36:14 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:36:14 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 00:36:16 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 00:39:02 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:39:02 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 00:39:04 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 00:39:07 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:39:07 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 00:39:09 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 00:39:11 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:39:11 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 00:39:13 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 00:39:15 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:39:15 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 00:39:17 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 00:39:20 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:39:20 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 00:39:22 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 00:42:02 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:42:02 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 00:42:03 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 00:42:05 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:42:05 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 00:42:06 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 00:42:08 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:42:08 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 00:42:09 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 00:42:11 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:42:11 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 00:42:12 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 00:42:13 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:42:13 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 00:42:15 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 00:45:02 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:45:02 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 00:45:05 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 00:45:08 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:45:08 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 00:45:11 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 00:45:14 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:45:14 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 00:45:16 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 00:45:19 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:45:20 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 00:45:22 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 00:45:24 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:45:24 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 00:45:26 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 00:48:02 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:48:02 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 00:48:03 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 00:48:04 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:48:04 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 00:48:05 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 00:48:06 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:48:06 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 00:48:08 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 00:48:09 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:48:09 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 00:48:10 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 00:48:11 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:48:11 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 00:48:13 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 00:51:03 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:51:03 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 00:51:05 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 00:51:07 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:51:07 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 00:51:09 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 00:51:11 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:51:11 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 00:51:13 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 00:51:14 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:51:14 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 00:51:16 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 00:51:17 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:51:17 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 00:51:19 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 00:54:01 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:54:01 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 00:54:03 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 00:54:04 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:54:04 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 00:54:06 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 00:54:07 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:54:07 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 00:54:09 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 00:54:10 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:54:10 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 00:54:11 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 00:54:13 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:54:13 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 00:54:14 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 00:57:01 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:57:01 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 00:57:03 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 00:57:04 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:57:04 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 00:57:06 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 00:57:07 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:57:07 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 00:57:08 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 00:57:10 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:57:10 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 00:57:11 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 00:57:13 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 00:57:13 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 00:57:14 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 01:00:02 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:00:02 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 01:00:04 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 01:00:06 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:00:06 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 01:00:08 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 01:00:10 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:00:10 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 01:00:12 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 01:00:14 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:00:14 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 01:00:16 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 01:00:18 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:00:18 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 01:00:19 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 01:03:02 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:03:02 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 01:03:03 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 01:03:05 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:03:05 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 01:03:06 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 01:03:08 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:03:08 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 01:03:09 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 01:03:11 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:03:11 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 01:03:12 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 01:03:14 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:03:14 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 01:03:16 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 01:06:02 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:06:02 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 01:06:03 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 01:06:05 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:06:05 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 01:06:06 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 01:06:08 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:06:08 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 01:06:10 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 01:06:11 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:06:11 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 01:06:13 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 01:06:14 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:06:14 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 01:06:16 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 01:09:01 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:09:01 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 01:09:03 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 01:09:04 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:09:04 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 01:09:06 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 01:09:07 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:09:07 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 01:09:09 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 01:09:11 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:09:11 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 01:09:12 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 01:09:14 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:09:14 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 01:09:15 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 01:12:01 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:12:01 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 01:12:02 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 01:12:04 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:12:04 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 01:12:05 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 01:12:07 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:12:07 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 01:12:08 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 01:12:10 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:12:10 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 01:12:11 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 01:12:13 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:12:13 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 01:12:14 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 01:15:02 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:15:02 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 01:15:04 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 01:15:05 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:15:05 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 01:15:09 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 01:15:11 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:15:11 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 01:15:13 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 01:15:16 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:15:16 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 01:15:17 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 01:15:19 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:15:19 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 01:15:21 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 01:18:07 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:18:07 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 01:18:08 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 01:18:10 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:18:10 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 01:18:15 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 01:18:16 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:18:16 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 01:18:17 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 01:18:19 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:18:19 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 01:18:20 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 01:18:21 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:18:21 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 01:18:23 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 01:21:06 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:21:06 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 01:21:08 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 01:21:09 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:21:09 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 01:21:11 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 01:21:12 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:21:12 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 01:21:14 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 01:21:15 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:21:15 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 01:21:17 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 01:21:19 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:21:19 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 01:21:20 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 01:24:02 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:24:02 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 01:24:03 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 01:24:04 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:24:04 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 01:24:06 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 01:24:07 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:24:07 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 01:24:08 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 01:24:10 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:24:10 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 01:24:11 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 01:24:13 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:24:13 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 01:24:14 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 01:27:02 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:27:02 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 01:27:03 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 01:27:04 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:27:04 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 01:27:06 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 01:27:07 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:27:07 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 01:27:09 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 01:27:10 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:27:10 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 01:27:11 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 01:27:13 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:27:13 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 01:27:14 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 01:30:02 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:30:02 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 01:30:03 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 01:30:05 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:30:05 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 01:30:07 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 01:30:09 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:30:09 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 01:30:11 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 01:30:13 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:30:13 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 01:30:15 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 01:30:16 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:30:16 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 01:30:18 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 01:33:01 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:33:01 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 01:33:03 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 01:33:04 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:33:04 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 01:33:05 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 01:33:07 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:33:07 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 01:33:08 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 01:33:10 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:33:10 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 01:33:11 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 01:33:12 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:33:12 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 01:33:14 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 01:36:02 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:36:02 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 01:36:04 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 01:36:07 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:36:07 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 01:36:09 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 01:36:11 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:36:11 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 01:36:12 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 01:36:14 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:36:14 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 01:36:16 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 01:36:18 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:36:18 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 01:36:20 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 01:39:02 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:39:02 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 01:39:03 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 01:39:04 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:39:05 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 01:39:06 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 01:39:07 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:39:07 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 01:39:09 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 01:39:10 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:39:10 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 01:39:11 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 01:39:13 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:39:13 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 01:39:14 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 01:42:01 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:42:01 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 01:42:03 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 01:42:04 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:42:04 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 01:42:17 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 01:42:19 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:42:19 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 01:42:21 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 01:42:23 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:42:23 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 01:42:25 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 01:42:26 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:42:26 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 01:42:29 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 01:45:02 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:45:02 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 01:45:05 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 01:45:08 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:45:09 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 01:45:11 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 01:45:15 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:45:15 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 01:45:18 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 01:45:21 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:45:21 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 01:45:24 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 01:45:27 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:45:27 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 01:45:29 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 01:48:02 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:48:02 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 01:48:03 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 01:48:05 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:48:05 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 01:48:06 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 01:48:07 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:48:07 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 01:48:09 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 01:48:10 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:48:10 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 01:48:11 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 01:48:13 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:48:13 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 01:48:14 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 01:51:02 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:51:02 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 01:51:03 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 01:51:05 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:51:05 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 01:51:06 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 01:51:08 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:51:08 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 01:51:09 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 01:51:11 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:51:11 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 01:51:12 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 01:51:14 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:51:14 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 01:51:16 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 01:54:02 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:54:02 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 01:54:03 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 01:54:05 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:54:05 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 01:54:06 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 01:54:07 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:54:08 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 01:54:09 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 01:54:10 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:54:10 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 01:54:12 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 01:54:13 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:54:13 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 01:54:14 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 01:57:02 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:57:02 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 01:57:03 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 01:57:05 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:57:05 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 01:57:06 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 01:57:08 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:57:08 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 01:57:09 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 01:57:10 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:57:11 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 01:57:12 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 01:57:13 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 01:57:13 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 01:57:15 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 02:00:02 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 02:00:02 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 02:00:04 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 02:00:05 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 02:00:06 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 02:00:07 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 02:00:09 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 02:00:09 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 02:00:11 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 02:00:13 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 02:00:13 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 02:00:15 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 02:00:16 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 02:00:17 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 02:00:18 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 02:03:02 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 02:03:02 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 02:03:03 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 02:03:04 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 02:03:04 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 02:03:06 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 02:03:07 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 02:03:07 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 02:03:09 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 02:03:10 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 02:03:10 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 02:03:11 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 02:03:13 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 02:03:13 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 02:03:14 KST] VM 시작 실패: ralphton-evaluator
+[2026-03-01 02:06:27 KST] ralphton-watcher: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 02:06:27 KST] VM 시작 중: ralphton-watcher (asia-northeast3-a)
+[2026-03-01 02:06:30 KST] VM 시작 실패: ralphton-watcher
+[2026-03-01 02:06:36 KST] ralphton-developer: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 02:06:36 KST] VM 시작 중: ralphton-developer (asia-northeast3-a)
+[2026-03-01 02:06:43 KST] VM 시작 실패: ralphton-developer
+[2026-03-01 02:06:46 KST] ralphton-domain-expert: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 02:06:46 KST] VM 시작 중: ralphton-domain-expert (asia-northeast3-a)
+[2026-03-01 02:06:49 KST] VM 시작 실패: ralphton-domain-expert
+[2026-03-01 02:06:52 KST] ralphton-a100: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 02:06:52 KST] VM 시작 중: ralphton-a100 (us-central1-a)
+[2026-03-01 02:06:54 KST] VM 시작 실패: ralphton-a100
+[2026-03-01 02:06:56 KST] ralphton-evaluator: 상태 확인 실패 (ERROR) → VM 시작 시도
+[2026-03-01 02:06:56 KST] VM 시작 중: ralphton-evaluator (asia-northeast3-a)
+[2026-03-01 02:06:58 KST] VM 시작 실패: ralphton-evaluator

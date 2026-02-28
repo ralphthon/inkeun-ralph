@@ -2,11 +2,11 @@
 
 21시간 해커톤(2/28 15:00 ~ 3/1 12:00)용 **Physical AI 파이프라인** 프로젝트.
 
-5개 AI 에이전트가 각각 GCP VM에서 Discord를 통해 협업하며, 축사 로더 시뮬레이터 구축 → 학습 데이터 생성 → ACT 모델 훈련을 자율적으로 수행한다.
+5개 AI 에이전트가 각각 GCP VM에서 Discord를 통해 협업하며, 레고 수거 로더 시뮬레이터 구축 → 학습 데이터 생성 → ACT 모델 훈련을 자율적으로 수행한다.
 
 ## D2E 논문 기반
 
-이 프로젝트는 **[D2E: Scaling Vision-Action Pretraining on Desktop Data for Transfer to Embodied AI](https://worv-ai.github.io/d2e/)** (ICLR 2026) 논문의 방법론을 축사 로더 도메인에 적용한다.
+이 프로젝트는 **[D2E: Scaling Vision-Action Pretraining on Desktop Data for Transfer to Embodied AI](https://worv-ai.github.io/d2e/)** (ICLR 2026) 논문의 방법론을 레고 수거 로더 도메인에 적용한다.
 
 [![D2E Pipeline Overview](example-data/d2e-teaser.png)](https://worv-ai.github.io/d2e/)
 
@@ -18,14 +18,14 @@ D2E의 핵심 아이디어:
 - **Vision-Action Pretraining (VAPT)**: 데스크톱 사전학습 표현을 물리적 작업으로 전이
 - **성과**: LIBERO 조작 96.6%, CANVAS 네비게이션 83.3%, SO101 실제 로봇 80% 성공률
 
-Ralphton은 이 파이프라인을 **축사 로더 시뮬레이터**에 적용하여, 시뮬레이션 데이터로 사전학습한 뒤 실제 농업 로봇으로 전이하는 것을 목표로 한다.
+Ralphton은 이 파이프라인을 **레고 수거 로더 시뮬레이터**에 적용하여, 시뮬레이션 데이터로 사전학습한 뒤 실제 로봇으로 전이하는 것을 목표로 한다.
 
 ## 프로젝트 개요
 
 VLA/IL 모델 학습을 위한 합성 비디오 데이터 생성 파이프라인.
-축사에서 소똥을 로더로 퍼서 옮기는 작업을 시뮬레이션하고, 다양한 시점의 비디오와 액션 라벨을 자동 생성한다.
+바닥에 흩어진 레고 블록을 로더(지게차)로 퍼서 수거하는 작업을 시뮬레이션하고, 다양한 시점의 비디오와 액션 라벨을 자동 생성한다.
 
-**최종 목표**: 실제 농업용 로더에 학습된 모델을 적용하여 자율 작업 수행
+**최종 목표**: 시뮬레이션으로 학습한 모델을 실제 로봇에 적용하여 자율 수거 작업 수행
 
 ## 시뮬레이터 데모
 
@@ -125,7 +125,7 @@ AI가 게임을 만들고, 게임이 학습 데이터를 생성한다.
 동일한 액션 시퀀스를 여러 시점에서 동시에 녹화한다:
 
 - **1인칭 (Ego)**: 로더 운전석 시점 — 실제 배포 시점, action과 직결
-- **3인칭 고정**: 축사 코너 CCTV 시점 — 전체 공간 이해, spatial reasoning
+- **3인칭 고정**: 고정 CCTV 시점 — 전체 공간 이해, spatial reasoning
 - **3인칭 추적**: 로더를 따라다니는 카메라 — object-centric representation
 - **Bird's Eye**: 위에서 내려다보는 평면도 — planning, 경로 시각화
 - **랜덤 시점**: 무작위 위치/각도 — view-invariant feature 학습
@@ -141,9 +141,9 @@ AI가 게임을 만들고, 게임이 학습 데이터를 생성한다.
 ### NL2SpaTiaL + 다중 시점
 
 ```
-자연어: "로더를 소똥 더미 가까이로 이동"
+자연어: "로더를 레고 더미 가까이로 이동"
     ↓
-SpaTiaL: closeTo(loader, manure_pile)
+SpaTiaL: closeTo(loader, lego_pile)
     ↓
 1인칭: 더미가 화면 중앙으로 이동
 3인칭: 로더-더미 거리 감소
@@ -186,11 +186,11 @@ DomainExpert → Developer: scenarios/
 
 ## 롱테일 케이스 (Edge Cases)
 
-- **장애물**: 소가 갑자기 앞으로 걸어옴, 다른 작업자 출현
-- **환경**: 바닥 미끄러움, 조명 어두움, 비/눈
+- **장애물**: 예상치 못한 물체, 다른 로봇 출현
+- **환경**: 바닥 미끄러움, 조명 변화, 레고 색상 다양화
 - **장비**: 버킷 가득 참, 유압 느림, 조향 이상
-- **공간**: 좁은 코너, 문 닫힘, 기둥 사이 통과
-- **복합**: 소 + 미끄러운 바닥 동시 발생
+- **공간**: 좁은 코너, 벽 근처, 기둥 사이 통과
+- **복합**: 장애물 + 좁은 공간 동시 발생
 
 ## 출력 데이터 형식
 
@@ -268,4 +268,4 @@ node evaluation-bot.js
 1. **데이터 생성**: 10,000+ 시나리오, 50,000+ 비디오 (시나리오당 5개 시점)
 2. **학습**: Multi-view VLA 모델, SpaTiaL consistency + Self-correction
 3. **평가**: Sim 성공률 95%+, Real 성공률 80%+
-4. **배포**: 실제 농업용 로더에 적용
+4. **배포**: 실제 로봇에 적용

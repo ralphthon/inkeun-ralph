@@ -11,7 +11,7 @@
 VM들은 모두 디스코드에서 대화를 할거야.
 
 **Watcher VM** (n2-standard-8, asia-northeast3-a) → 지휘자. 타임라인 관리, Phase 전환, 장애 대응
-**DomainExpert VM** (n2-standard-4, asia-northeast3-a) → 도메인 지식 기반 롱테일 식별 및 시나리오 JSON config 생성
+**DomainExpert VM** (n2-standard-4, asia-northeast3-a) → FMEA 방법론 기반 롱테일/에지케이스 체계적 식별, SPS 우선순위 기반 시나리오 JSON config 생성, Evaluation 피드백으로 FMEA 레지스트리 갱신
 **Developer VM** (n2-standard-8, asia-northeast3-a) → 시뮬레이터 개발, headless 렌더링, 배치 비디오 생성
 **Training VM** = ralphton-a100 (A100 40GB Standard, us-central1-a) → LeRobot 변환 + ACT 학습 + checkpoint 관리
 **Evaluation VM** (n2-standard-4, asia-northeast3-a) → 데이터 품질 검증, 모델 평가, 피드백 루프 생성
@@ -60,9 +60,13 @@ initial trigger를 하면 이 레포를 살펴보고 각 VM에게 `SSOT/{에이�
 - 산출물 생성 시 경로를 명시 (`~/output/episode_001/`)
 - 에러 발생 시 로그 첨부하여 BLOCKED 보고
 
-**DomainExpert (도메인 전문가)**
-- 에지케이스 시나리오 목록 생성
-- Developer에게 시나리오 파라미터 전달 (레고 개수, 배치, 장애물)
+**DomainExpert (도메인 전문가, FMEA 기반)**
+- FMEA 방법론으로 고장모드 식별 → SPS = (Severity × Occurrence) / Difficulty 로 우선순위 산출
+- 32개 고장모드를 Tier 1~3으로 분류, Tier 1부터 시나리오 집중 생성
+- 안전 시나리오 포함: 절벽(비상정지), 애완동물(일시정지), 아이(완전정지), 바닥함몰(회피)
+- Domain Randomization 범위를 모든 시나리오에 적용 (Tobin et al. 2017)
+- Evaluation 피드백 수신 시 FMEA 레지스트리 O 점수 갱신 → SPS 재계산 → Tier 승격 반영
+- Developer에게 FMEA 메타데이터 포함 시나리오 JSON config 전달
 
 **Training (학습 에이전트)**
 - Developer로부터 HANDOFF 받으면 데이터 검증 → 학습 시작

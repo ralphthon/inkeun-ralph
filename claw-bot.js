@@ -3,6 +3,25 @@ require('dotenv').config();
 
 const CHANNEL_NAME = process.env.DISCORD_CHANNEL || 'claw-dev-chat';
 
+// 봇 User ID 맵 (토큰 base64 디코딩으로 추출)
+const BOT_IDS = {
+  Watcher: '1477205631927717900',
+  Developer: '1477168971718332516',
+  DomainExpert: '1477242490640928848',
+  Training: '1477243247956066414',
+  Evaluation: '1477244275803689020',
+};
+
+function mention(agentName) {
+  const id = BOT_IDS[agentName];
+  if (!id) throw new Error(`Unknown agent: ${agentName}`);
+  return `<@${id}>`;
+}
+
+function mentionAll() {
+  return Object.values(BOT_IDS).map(id => `<@${id}>`).join(' ');
+}
+
 /**
  * Discord 봇 클라이언트를 생성하고 연결한다.
  * 자동 응답 없음 — 메시지 수신 시 onMessage 콜백만 호출.
@@ -61,4 +80,4 @@ function createBot({ name, token, onMessage }) {
   });
 }
 
-module.exports = { createBot };
+module.exports = { createBot, BOT_IDS, mention, mentionAll };

@@ -26,9 +26,34 @@ initial trigger를 하면 이 레포를 살펴보고 각 VM에게 `SSOT/{에이�
 ### 기본 통신 프로토콜
 
 - **채널**: Discord `#claw-dev-chat` (Guild: `1477168227384561758`)
-- **호출 방식**: 반드시 `@멘션`으로 상대를 지정 (멘션 없는 메시지는 무시됨)
+- **호출 방식**: 반드시 `<@USER_ID>` 형식으로 상대를 멘션 (텍스트 `@이름`은 알림이 가지 않음)
 - **1:1 대화**: 한 번에 한 에이전트만 멘션 (멀티멘션 금지 — 혼선 방지)
 - **루프 방지**: 응답에 상대를 재멘션하지 않음. 추가 작업이 필요할 때만 명시적으로 멘션
+
+### ⚠️ Discord 멘션 ID 맵 (필수 — 모든 에이전트 숙지)
+
+Discord API에서 `@멘션`은 **반드시** `<@USER_ID>` 형식으로 보내야 한다.
+텍스트로 `@Developer-Claw` 라고 쓰면 **알림이 전달되지 않는다.**
+
+**봇 User ID:**
+
+- **Watcher**: `<@1477205631927717900>`
+- **Developer**: `<@1477168971718332516>`
+- **DomainExpert**: `<@1477242490640928848>`
+- **Training**: `<@1477243247956066414>`
+- **Evaluation**: `<@1477244275803689020>`
+
+**올바른 예시:**
+```
+<@1477168971718332516> [HANDOFF] Phase 1 시뮬레이터 구축 시작.
+```
+
+**잘못된 예시 (알림 안 감):**
+```
+@Developer [HANDOFF] Phase 1 시뮬레이터 구축 시작.
+```
+
+**자기 자신의 ID도 알아야 한다** — 다른 에이전트의 메시지에서 자기 ID가 포함되었는지 확인하여 자신에게 온 메시지를 식별한다.
 
 ### 메시지 구조
 
@@ -101,6 +126,7 @@ gs://ralphton-handoff/
 ├── dataset/                 ← Developer → Training (LeRobot HDF5 변환 후)
 ├── checkpoints/             ← Training → Evaluation (학습 checkpoint)
 ├── reports/                 ← Evaluation → Watcher (평가 리포트)
+├── lessons/                 ← Watcher → 전 에이전트 (사이클별 레슨런)
 └── logs/                    ← 각 에이전트 작업 로그
 ```
 
@@ -128,7 +154,7 @@ DomainExpert → Developer: REQUEST + gs://ralphton-handoff/scenarios/ (추가 �
 
 ### 금지 사항
 
-- 멘션 없이 메시지 보내기 (무시됨)
+- `<@USER_ID>` 형식 없이 텍스트 `@이름`으로만 보내기 (알림 전달 안 됨)
 - 응답에 상대를 자동 재멘션 (무한 루프 위험)
 - 한 메시지에 여러 에이전트 동시 멘션
 - SSOT 파일 직접 수정 (Watcher만 SSOT 업데이트 권한)

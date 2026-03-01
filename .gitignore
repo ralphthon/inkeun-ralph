@@ -2,3 +2,6 @@
 node_modules/
 vm-configs/
 example-data
+tmp*.js
+tmp-eval-videos/
+.DS_Store

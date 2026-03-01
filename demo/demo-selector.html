@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LEGO Loader Edge Case Demo</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #1a1a2e;
+      --surface: #16213e;
+      --surface2: #0f3460;
+      --border: rgba(255,255,255,0.08);
+      --text: #e0e0e0;
+      --text-muted: #888;
+      --sidebar-width: 320px;
+      --topbar-height: 56px;
+
+      --cat-a: #4A90D9;
+      --cat-b: #E74C3C;
+      --cat-c: #F39C12;
+      --cat-d: #27AE60;
+      --cat-e: #8E44AD;
+      --cat-f: #7F8C8D;
+
+      --tier1: #F1C40F;
+      --tier2: #BDC3C7;
+      --tier3: #CD7F32;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ── Top Bar ── */
+    #topbar {
+      height: var(--topbar-height);
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      gap: 24px;
+      flex-shrink: 0;
+    }
+
+    #topbar h1 {
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+      letter-spacing: 0.3px;
+    }
+
+    #topbar .divider {
+      width: 1px;
+      height: 20px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+
+    #topbar .stats {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .stat-chip {
+      font-size: 12px;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    .stat-chip strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* ── Main Layout ── */
+    #main {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* ── Sidebar ── */
+    #sidebar {
+      width: var(--sidebar-width);
+      flex-shrink: 0;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    #filter-bar {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .filter-btn {
+      padding: 4px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+      letter-spacing: 0.5px;
+    }
+
+    .filter-btn:hover {
+      border-color: rgba(255,255,255,0.2);
+      color: var(--text);
+    }
+
+    .filter-btn.active {
+      color: #fff;
+    }
+
+    .filter-btn[data-cat="all"].active { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.3); }
+    .filter-btn[data-cat="A"].active { background: var(--cat-a); border-color: var(--cat-a); }
+    .filter-btn[data-cat="B"].active { background: var(--cat-b); border-color: var(--cat-b); }
+    .filter-btn[data-cat="C"].active { background: var(--cat-c); border-color: var(--cat-c); }
+    .filter-btn[data-cat="D"].active { background: var(--cat-d); border-color: var(--cat-d); }
+    .filter-btn[data-cat="E"].active { background: var(--cat-e); border-color: var(--cat-e); }
+    .filter-btn[data-cat="F"].active { background: var(--cat-f); border-color: var(--cat-f); }
+
+    #scenario-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px;
+    }
+
+    #scenario-list::-webkit-scrollbar { width: 4px; }
+    #scenario-list::-webkit-scrollbar-track { background: transparent; }
+    #scenario-list::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+    .scenario-card {
+      padding: 10px 12px;
+      border-radius: 8px;
+      margin-bottom: 4px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: background 0.12s, border-color 0.12s;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .scenario-card:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: var(--border);
+    }
+
+    .scenario-card.active {
+      background: rgba(255,255,255,0.07);
+    }
+
+    .card-row1 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .id-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      color: #fff;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
+
+    .scenario-name {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text);
+      flex: 1;
+      line-height: 1.3;
+    }
+
+    .card-row2 {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding-left: 2px;
+    }
+
+    .tier-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 3px;
+    }
+
+    .tier-1 { background: rgba(241,196,15,0.2); color: var(--tier1); border: 1px solid rgba(241,196,15,0.3); }
+    .tier-2 { background: rgba(189,195,199,0.15); color: var(--tier2); border: 1px solid rgba(189,195,199,0.25); }
+    .tier-3 { background: rgba(205,127,50,0.2); color: var(--tier3); border: 1px solid rgba(205,127,50,0.3); }
+
+    .sps-label {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .not-impl-badge {
+      margin-left: auto;
+      font-size: 9px;
+      font-weight: 600;
+      padding: 1px 5px;
+      border-radius: 3px;
+      background: rgba(231,76,60,0.15);
+      color: #E74C3C;
+      border: 1px solid rgba(231,76,60,0.25);
+      white-space: nowrap;
+    }
+
+    /* ── Content Area ── */
+    #content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    #welcome {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: var(--text-muted);
+    }
+
+    #welcome .icon {
+      font-size: 48px;
+      opacity: 0.3;
+      line-height: 1;
+    }
+
+    #welcome h2 {
+      font-size: 18px;
+      font-weight: 500;
+      color: rgba(255,255,255,0.4);
+    }
+
+    #welcome p {
+      font-size: 13px;
+      color: var(--text-muted);
+      text-align: center;
+      max-width: 320px;
+      line-height: 1.6;
+    }
+
+    #simulator-frame {
+      flex: 1;
+      border: none;
+      display: none;
+      background: #000;
+    }
+
+    #frame-border {
+      flex: 1;
+      display: none;
+      padding: 3px;
+      border-top: 3px solid transparent;
+    }
+
+    #frame-border.visible {
+      display: flex;
+    }
+
+    #frame-border iframe {
+      flex: 1;
+      border: none;
+      background: #000;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 700px) {
+      #main { flex-direction: column; }
+      #sidebar { width: 100%; height: 280px; border-right: none; border-bottom: 1px solid var(--border); }
+      #topbar .stats { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<div id="topbar">
+  <h1>LEGO Loader Edge Case Demo</h1>
+  <div class="divider"></div>
+  <div class="stats" id="stats-row">
+    <!-- filled by JS -->
+  </div>
+</div>
+
+<!-- Main Layout -->
+<div id="main">
+
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <div id="filter-bar">
+      <button class="filter-btn active" data-cat="all">All</button>
+      <button class="filter-btn" data-cat="A" style="--c: var(--cat-a)">A</button>
+      <button class="filter-btn" data-cat="B">B</button>
+      <button class="filter-btn" data-cat="C">C</button>
+      <button class="filter-btn" data-cat="D">D</button>
+      <button class="filter-btn" data-cat="E">E</button>
+      <button class="filter-btn" data-cat="F">F</button>
+    </div>
+    <div id="scenario-list"></div>
+  </div>
+
+  <!-- Content -->
+  <div id="content">
+    <div id="welcome">
+      <div class="icon">&#x1F9F1;</div>
+      <h2>Edge Case Simulator</h2>
+      <p>좌측 목록에서 시나리오를 선택하면<br>해당 엣지케이스 시뮬레이터가 로드됩니다.</p>
+    </div>
+    <div id="frame-border">
+      <iframe id="simulator-frame" title="Edge Case Simulator"></iframe>
+    </div>
+  </div>
+
+</div>
+
+<script type="module">
+  import { SCENARIOS, CATEGORIES, getStats } from './scenarios.js';
+
+  const CAT_COLORS = {
+    A: '#4A90D9',
+    B: '#E74C3C',
+    C: '#F39C12',
+    D: '#27AE60',
+    E: '#8E44AD',
+    F: '#7F8C8D',
+  };
+
+  // ── Stats bar ──
+  const stats = getStats();
+  document.getElementById('stats-row').innerHTML = [
+    `<span class="stat-chip"><strong>${stats.total}</strong> Scenarios</span>`,
+    `<span class="stat-chip"><strong>${stats.implementable}</strong> Implementable</span>`,
+    `<span class="stat-chip" style="color:#F1C40F"><strong>${stats.tierCounts[1]}</strong> Tier 1</span>`,
+    `<span class="stat-chip" style="color:#BDC3C7"><strong>${stats.tierCounts[2]}</strong> Tier 2</span>`,
+    `<span class="stat-chip" style="color:#CD7F32"><strong>${stats.tierCounts[3]}</strong> Tier 3</span>`,
+  ].join('');
+
+  // ── Scenario list ──
+  let activeId = null;
+  let activeFilter = 'all';
+
+  function renderList(filter) {
+    const list = document.getElementById('scenario-list');
+    const visible = filter === 'all'
+      ? SCENARIOS
+      : SCENARIOS.filter(s => s.category === filter);
+
+    list.innerHTML = '';
+    visible.forEach(s => {
+      const color = CAT_COLORS[s.category];
+      const card = document.createElement('div');
+      card.className = 'scenario-card' + (s.id === activeId ? ' active' : '');
+      card.dataset.id = s.id;
+      card.style.borderLeftColor = s.id === activeId ? color : 'transparent';
+
+      card.innerHTML = `
+        <div class="card-row1">
+          <span class="id-badge" style="background:${color}">${s.id}</span>
+          <span class="scenario-name">${s.name}</span>
+        </div>
+        <div class="card-row2">
+          <span class="tier-badge tier-${s.tier}">Tier ${s.tier}</span>
+          <span class="sps-label">SPS ${s.sps.toFixed(1)}</span>
+          ${!s.implementable ? '<span class="not-impl-badge">Not Implementable</span>' : ''}
+        </div>
+      `;
+
+      card.addEventListener('click', () => selectScenario(s));
+      list.appendChild(card);
+    });
+  }
+
+  function selectScenario(s) {
+    activeId = s.id;
+    const color = CAT_COLORS[s.category];
+
+    // Update card highlights
+    document.querySelectorAll('.scenario-card').forEach(c => {
+      const isActive = c.dataset.id === s.id;
+      c.classList.toggle('active', isActive);
+      c.style.borderLeftColor = isActive ? color : 'transparent';
+    });
+
+    // Show frame
+    const welcome = document.getElementById('welcome');
+    const frameBorder = document.getElementById('frame-border');
+    const iframe = document.getElementById('simulator-frame');
+
+    welcome.style.display = 'none';
+    frameBorder.classList.add('visible');
+    frameBorder.style.borderTopColor = color;
+
+    iframe.src = `edge-case-simulator.html?scenario=${s.id}`;
+  }
+
+  // ── Filter buttons ──
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.dataset.cat;
+      renderList(activeFilter);
+    });
+  });
+
+  // Initial render
+  renderList('all');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,295 @@
+{
+  "title": "Ralphton 해커톤 회고",
+  "author": "WoRV AI",
+  "palette": "navy",
+  "slides": [
+    {
+      "layout": "cover",
+      "title": "Ralphton 해커톤 회고",
+      "subtitle": "5개 AI 에이전트가 21시간 동안 자율 협업한 Physical AI 파이프라인 실험",
+      "author": "WoRV AI",
+      "date": "2026.03"
+    },
+    {
+      "layout": "section",
+      "badge": "OVERVIEW",
+      "title": "D2E — AI가 게임을 만들고\n게임이 AI를 가르친다"
+    },
+    {
+      "layout": "image_text",
+      "title": "D2E (Desktop to Embodied AI)",
+      "oneliner": "Three.js 시뮬레이터에서 Expert Agent가 레고를 수거하는 시범을 보여주고, 그 데이터로 ACT 모델을 학습시킵니다.",
+      "image_path": "/Users/inkeun/projects/ralphton/progress/PPT_20260301_01_해커톤회고/images/simulator_demo.jpg",
+      "text": "Three.js + cannon-es 물리엔진 기반\n로더 액션: steering, throttle, bucket, lift\nExpert Agent 7개 상태 머신\nego/birds_eye/follow 3시점 녹화",
+      "footnotes": ["* ACT: Action Chunking with Transformers", "** D2E: Desktop to Embodied AI"]
+    },
+    {
+      "layout": "three_column",
+      "title": "5-Agent 멀티 VM 시스템",
+      "oneliner": "5개 AI 에이전트가 각각 GCP VM에서 Discord를 통해 13시간 넘게 자율 협업했습니다.",
+      "columns": [
+        {
+          "heading": "지휘 & 감시",
+          "description": "Watcher: 타임라인 관리\nCCD Watchdog: 5분 간격 감시\n3중 안전장치 (systemd → watchdog → cron)"
+        },
+        {
+          "heading": "개발 & 설계",
+          "description": "Developer: 시뮬레이터 + 데이터\nDomainExpert: FMEA 시나리오\n32개 고장모드 식별"
+        },
+        {
+          "heading": "학습 & 평가",
+          "description": "Training: A100 GPU 학습\nEvaluation: 품질 검증\n피드백 루프 생성"
+        }
+      ],
+      "footnotes": ["* FMEA: Failure Mode and Effects Analysis"]
+    },
+    {
+      "layout": "section",
+      "badge": "SIMULATOR",
+      "title": "시뮬레이터 시연"
+    },
+    {
+      "layout": "image_text",
+      "title": "Expert Agent — ego 카메라 뷰",
+      "oneliner": "ACT 모델은 이 1인칭 카메라 영상만 보고 로더를 조종하는 법을 학습합니다.",
+      "image_path": "/Users/inkeun/projects/ralphton/progress/PPT_20260301_01_해커톤회고/images/debug_frame0.png",
+      "text": "640x480 → 224x224 리사이즈\n4D 연속 액션: steering, throttle, bucket, lift\n30Hz 캡처, 학습 시 10Hz 사용\nchunk_size 20 (0.67초 예측)",
+      "footnotes": []
+    },
+    {
+      "layout": "image_text",
+      "title": "시뮬레이터 전경 — 로더와 레고",
+      "oneliner": "노란색 로더가 방 안에 흩어진 레고 블록을 수거하여 파란색 박스에 넣는 것이 목표입니다.",
+      "image_path": "/Users/inkeun/projects/ralphton/progress/PPT_20260301_01_해커톤회고/images/simulator_demo2.jpg",
+      "text": "Three.js + cannon-es 물리 시뮬레이션\n다양한 색상/크기의 레고 블록 배치\n가구, 벽 등 장애물 포함\n실시간 충돌 감지 및 물리 반응",
+      "footnotes": []
+    },
+    {
+      "layout": "image_text",
+      "title": "조감도 — 다양한 레고 분포",
+      "oneliner": "학습 데이터의 다양성을 위해 레고 위치, 수량, 색상을 매번 랜덤으로 변경합니다.",
+      "image_path": "/Users/inkeun/projects/ralphton/progress/PPT_20260301_01_해커톤회고/images/evolution_late.jpg",
+      "text": "Domain Randomization 적용\n레고 위치 uniform random\n레고 수량 ±30% 변형\n로더 시작 위치/방향 랜덤",
+      "footnotes": []
+    },
+    {
+      "layout": "section",
+      "badge": "TRAINING",
+      "title": "학습 파이프라인\n데이터 생성 → ACT 학습 → Rollout 평가"
+    },
+    {
+      "layout": "image_text",
+      "title": "v1 Rollout — 첫 에피소드",
+      "oneliner": "Phase 1에서 1시간 만에 첫 에피소드를 완성했고, 7/10 레고 수거에 성공했습니다.",
+      "image_path": "/Users/inkeun/projects/ralphton/progress/PPT_20260301_01_해커톤회고/images/v1_rollout.jpg",
+      "text": "수거 성공률: 70% (7/10 레고)\n에피소드 길이: 65초\n계획보다 1시간 빠른 완성\nbucket 76%, lift 84% zero → 액션 편향 발견",
+      "footnotes": []
+    },
+    {
+      "layout": "stats_grid",
+      "title": "ACT 500 Epoch 학습 결과",
+      "oneliner": "오프라인 메트릭은 역대 최저 Loss를 기록하며 수렴했지만, 실제 Rollout에서는 0% 성공률이었습니다.",
+      "stats": [
+        {"number": "0.00008", "label": "Best Loss"},
+        {"number": "0.0059", "label": "MAE"},
+        {"number": "5h 13m", "label": "학습시간"},
+        {"number": "0%", "label": "Rollout"}
+      ],
+      "footnotes": ["* MAE: Mean Absolute Error", "** Rollout: 학습된 모델이 직접 조종하는 실전 테스트"]
+    },
+    {
+      "layout": "image_text",
+      "title": "v2 Rollout — Expert-only 50ep",
+      "oneliner": "Expert 데이터만으로 학습한 모델은 LIFTING 상태에서 벗어나지 못하는 전형적인 covariate shift를 보였습니다.",
+      "image_path": "/Users/inkeun/projects/ralphton/progress/PPT_20260301_01_해커톤회고/images/v2_rollout.jpg",
+      "text": "52개 에피소드 (13 시나리오 x 4)\n500 epoch 학습, Loss 0.000080\nclosed-loop 성공률 0%\n원인: error recovery 미학습",
+      "footnotes": ["* Covariate shift: 학습 시 본 상태와 실전 상태의 불일치"]
+    },
+    {
+      "layout": "image_text",
+      "title": "v3 Stage 1 — Recovery 데이터 추가",
+      "oneliner": "실수에서 복구하는 시퀀스 200개를 추가하여 LIFTING 탈출 문제를 해결했습니다.",
+      "image_path": "/Users/inkeun/projects/ralphton/progress/PPT_20260301_01_해커톤회고/images/v3_stage1.jpg",
+      "text": "200개 recovery 에피소드 생성\n320x240/10Hz로 해상도 축소\nfinetune 100 epoch\nLIFTING→TRANSPORTING 전환 성공",
+      "footnotes": []
+    },
+    {
+      "layout": "image_text",
+      "title": "v3 Best — Ep25 Rollout",
+      "oneliner": "2nd-stage Ep25에서 LIFTING 탈출에 성공했지만, 벽 근처 WALL_STUCK이라는 새로운 문제가 발생했습니다.",
+      "image_path": "/Users/inkeun/projects/ralphton/progress/PPT_20260301_01_해커톤회고/images/v3_best.jpg",
+      "text": "LIFTING_LOOP_TRAP 해결 확인\n벽 근처(-7.5,-7.5) 탈출 불가\nWALL_STUCK: 학습 데이터에 없는 상태\nv5 wall patch 24ep 추가 시도",
+      "footnotes": []
+    },
+    {
+      "layout": "image_text",
+      "title": "Rollout Evolution — 버전별 변화",
+      "oneliner": "v1→v2→v3 순으로 모델이 점진적으로 개선되었지만, 최종 성공률 0%를 넘지 못한 채 시간이 종료되었습니다.",
+      "image_path": "/Users/inkeun/projects/ralphton/progress/PPT_20260301_01_해커톤회고/images/evolution_mid.jpg",
+      "text": "v1: 검증용 10ep → v2: expert-only 52ep\nv3: recovery 200ep → v5: wall patch 24ep\n총 286개 에피소드 생성 (목표 1,000의 28.6%)\nWall FT 진행 중 시간 종료",
+      "footnotes": []
+    },
+    {
+      "layout": "section",
+      "badge": "RESULTS",
+      "title": "목표 vs 실제"
+    },
+    {
+      "layout": "stats_grid",
+      "title": "핵심 KPI 달성률",
+      "oneliner": "10회 학습 루프 목표 대비 3회 완료, 1,000 에피소드 목표 대비 286개(28.6%) 생성에 그쳤습니다.",
+      "stats": [
+        {"number": "3/10", "label": "루프"},
+        {"number": "286", "label": "에피소드"},
+        {"number": "0%", "label": "성공률"},
+        {"number": "$70~120", "label": "총비용"}
+      ],
+      "footnotes": []
+    },
+    {
+      "layout": "two_column",
+      "title": "계획 vs 실제 타임라인",
+      "oneliner": "사이클당 30~70분을 예상했지만 실제로는 3~5시간이 소요되어, 계획 대비 시간이 크게 부족했습니다.",
+      "left": {
+        "heading": "계획",
+        "items": [
+          "사이클당 30~70분",
+          "10회 루프 완주",
+          "1,000 에피소드",
+          "Phase별 순차 진행",
+          "VM 스케일링 활용"
+        ]
+      },
+      "right": {
+        "heading": "실제",
+        "items": [
+          "사이클당 3~5시간",
+          "3회 루프 + Wall FT",
+          "286 에피소드 (28.6%)",
+          "학습 대기 5시간 공백",
+          "VM 스케일링 0회"
+        ]
+      },
+      "footnotes": []
+    },
+    {
+      "layout": "section",
+      "badge": "BOTTLENECK",
+      "title": "3대 병목"
+    },
+    {
+      "layout": "two_column",
+      "title": "병목 1: 에피소드 생성 속도",
+      "oneliner": "에피소드 1개 생성에 4~8분이 걸려 1,000개 목표는 물리적으로 불가능했고, 병렬화를 하지 않은 것이 핵심 실수였습니다.",
+      "left": {
+        "heading": "문제",
+        "items": [
+          "에피소드당 4~8분 소요",
+          "1,000개 = 약 100시간 필요",
+          "단일 스레드로만 생성",
+          "throughput 사전 측정 없음"
+        ]
+      },
+      "right": {
+        "heading": "해결책 (사후)",
+        "items": [
+          "multi-process headless 병렬화",
+          "Developer VM 최대 3대 추가",
+          "320x240/10Hz 해상도 축소",
+          "throughput 사전 벤치마크"
+        ]
+      },
+      "footnotes": []
+    },
+    {
+      "layout": "image_text",
+      "title": "병목 2: Rollout Compounding Error",
+      "oneliner": "오프라인 Loss 0.000080이었지만 실전 성공률은 0%로, 시험 만점이지만 실전에서 0점인 상황이었습니다.",
+      "image_path": "/Users/inkeun/projects/ralphton/progress/PPT_20260301_01_해커톤회고/images/midstart.jpg",
+      "text": "Root Cause 1: ImageNet 정규화 불일치\nRoot Cause 2: Expert-only covariate shift\nRoot Cause 3: WALL_STUCK 미커버\n해결: DAgger + Perturbation Injection 필요",
+      "footnotes": ["* DAgger: Dataset Aggregation (반복적 데이터 수집)"]
+    },
+    {
+      "layout": "bar_chart",
+      "title": "병목 3: 학습 시간",
+      "oneliner": "첫 학습에 500 epoch을 투입하여 5시간 13분을 소비했고, 이 구간이 전체 해커톤의 가장 큰 낭비였습니다.",
+      "unit": "시간",
+      "highlight": 0,
+      "bars": [
+        {"label": "v2 500ep", "value": 5.2},
+        {"label": "v3 100ep", "value": 1.5},
+        {"label": "v3 2nd 50ep", "value": 0.75},
+        {"label": "Wall FT", "value": 0.75}
+      ],
+      "footnotes": ["* epoch: AI가 전체 데이터를 한 바퀴 학습하는 단위"]
+    },
+    {
+      "layout": "section",
+      "badge": "TAKEAWAY",
+      "title": "성과 & 교훈"
+    },
+    {
+      "layout": "two_column",
+      "title": "잘된 점 vs 아쉬운 점",
+      "oneliner": "자율 협업은 성공했지만, throughput 미측정과 병렬화 부재가 핵심 실패 원인이었습니다.",
+      "left": {
+        "heading": "잘된 점",
+        "items": [
+          "5 에이전트 13시간+ 자율 협업",
+          "Watchdog 5분 내 감지/복구",
+          "ACT 오프라인 수렴 우수",
+          "실패 원인 정확히 진단",
+          "적응형 데이터 전략 설계"
+        ]
+      },
+      "right": {
+        "heading": "아쉬운 점",
+        "items": [
+          "throughput 사전 측정 없음",
+          "에피소드 생성 병렬화 미실행",
+          "첫 학습 500ep (계획: 10ep)",
+          "Rollout을 1루프부터 안 돌림",
+          "Recovery 데이터 초기 미포함"
+        ]
+      },
+      "footnotes": []
+    },
+    {
+      "layout": "three_column",
+      "title": "핵심 교훈 3가지",
+      "oneliner": "오프라인 메트릭이 좋아도 실전은 별개이며, 속도를 먼저 측정하고, 기다리는 시간을 낭비하지 말아야 합니다.",
+      "columns": [
+        {
+          "heading": "실전 우선 검증",
+          "description": "오프라인 점수 ≠ 실전 성능\nRollout을 1루프부터 실행\n빠른 실패가 긴 학습보다 낫다"
+        },
+        {
+          "heading": "속도를 먼저 측정",
+          "description": "throughput 벤치마크 선행\n현실적 목표 설정\n병렬화 전략 사전 수립"
+        },
+        {
+          "heading": "대기 시간 활용",
+          "description": "학습-생성 파이프라인 병렬화\n다음 루프 데이터 미리 준비\n5시간 공백을 0으로 줄이기"
+        }
+      ],
+      "footnotes": []
+    },
+    {
+      "layout": "stats_grid",
+      "title": "비용 분석",
+      "oneliner": "총 $70~120 중 AI API 호출 비용이 서버 비용의 2.5~5배로 가장 큰 비중을 차지했습니다.",
+      "stats": [
+        {"number": "$20", "label": "VM 5대"},
+        {"number": "$50~100", "label": "AI API"},
+        {"number": "8.5%", "label": "GPU 사용"},
+        {"number": "200+", "label": "메시지"}
+      ],
+      "footnotes": ["* A100 40GB 중 3.4GB만 사용 (T4/L4로 충분했을 가능성)"]
+    },
+    {
+      "layout": "closing",
+      "title": "실전으로 검증하고, 속도를 측정하고,\n기다리지 말고 병렬로 움직여라.",
+      "contact": "Ralphton — WoRV AI"
+    }
+  ]
+}

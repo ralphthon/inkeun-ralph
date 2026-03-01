@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Batch Edge Case Recorder</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #1a1a2e;
+      color: #e0e0e0;
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px 40px;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: 0.5px;
+      margin-bottom: 24px;
+    }
+
+    /* ── Progress section ────────────────────────────── */
+    .progress-section {
+      width: 100%;
+      max-width: 900px;
+      background: #16213e;
+      border: 1px solid #0f3460;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 16px;
+    }
+
+    .progress-bar-track {
+      width: 100%;
+      height: 12px;
+      background: #0d1b2a;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #11998e, #38ef7d, #3a7bd5);
+      border-radius: 6px;
+      transition: width 0.5s ease;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .progress-label {
+      font-size: 0.95rem;
+      color: #b0c4de;
+    }
+
+    .progress-label strong {
+      color: #ffffff;
+    }
+
+    .progress-time {
+      font-size: 0.88rem;
+      color: #7f8fa4;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* ── Controls ───────────────────────────────────── */
+    .controls {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    button {
+      font-family: 'Segoe UI', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      padding: 9px 20px;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+
+    button:active { transform: scale(0.97); }
+    button:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    #btn-start  { background: #11998e; color: #fff; }
+    #btn-pause  { background: #e2a923; color: #1a1a2e; }
+    #btn-skip   { background: #3a7bd5; color: #fff; }
+    #btn-reset  { background: #444; color: #e0e0e0; }
+
+    /* ── Scenario checklist ─────────────────────────── */
+    .list-section {
+      width: 100%;
+      max-width: 900px;
+      background: #16213e;
+      border: 1px solid #0f3460;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+    }
+
+    .list-section h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #b0c4de;
+      margin-bottom: 14px;
+      letter-spacing: 0.3px;
+    }
+
+    .scenario-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .scenario-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 10px;
+      border-radius: 7px;
+      background: #0d1b2a;
+      border: 1px solid transparent;
+      transition: border-color 0.2s, background 0.2s;
+      user-select: none;
+    }
+
+    .scenario-row.is-recording {
+      border-color: #e74c3c;
+      background: #1a0d0d;
+    }
+
+    .scenario-row.is-done {
+      border-color: #27ae60;
+      background: #0d1a12;
+    }
+
+    .scenario-row.is-skipped {
+      opacity: 0.5;
+    }
+
+    .scenario-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: #11998e;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .category-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .scenario-id {
+      font-size: 0.78rem;
+      color: #7f8fa4;
+      font-family: 'Courier New', monospace;
+      font-weight: 600;
+      flex-shrink: 0;
+      min-width: 56px;
+    }
+
+    .scenario-name {
+      font-size: 0.88rem;
+      color: #d0dce8;
+      flex: 1;
+    }
+
+    .scenario-sps {
+      font-size: 0.75rem;
+      color: #5a6a7a;
+      flex-shrink: 0;
+    }
+
+    .status-icon {
+      font-size: 1rem;
+      flex-shrink: 0;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    /* Pulsing red dot for current recording */
+    .recording-pulse {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #e74c3c;
+      animation: pulse 1s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.7); }
+    }
+
+    /* ── Summary ────────────────────────────────────── */
+    .summary-section {
+      width: 100%;
+      max-width: 900px;
+      background: #16213e;
+      border: 1px solid #27ae60;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .summary-section h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #38ef7d;
+      margin-bottom: 12px;
+    }
+
+    .summary-stats {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .stat-value {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .stat-label {
+      font-size: 0.78rem;
+      color: #7f8fa4;
+    }
+
+    /* ── Warning banner ─────────────────────────────── */
+    .warning-banner {
+      width: 100%;
+      max-width: 900px;
+      background: #3d2000;
+      border: 1px solid #e2a923;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 0.85rem;
+      color: #f0c060;
+      margin-bottom: 12px;
+      display: none;
+    }
+
+    /* ── iframe wrapper ─────────────────────────────── */
+    .iframe-wrapper {
+      width: 100%;
+      max-width: 900px;
+      background: #0d1b2a;
+      border: 1px solid #0f3460;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .iframe-label {
+      padding: 10px 16px;
+      font-size: 0.8rem;
+      color: #5a6a7a;
+      border-bottom: 1px solid #0f3460;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #simulator-frame {
+      width: 100%;
+      height: 600px;
+      border: none;
+      background: #000;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Batch Edge Case Recorder</h1>
+
+<!-- Warning banner for timeout/skip -->
+<div class="warning-banner" id="warning-banner"></div>
+
+<!-- Progress section -->
+<div class="progress-section">
+  <div class="progress-bar-track">
+    <div class="progress-bar-fill" id="progress-fill"></div>
+  </div>
+  <div class="progress-meta">
+    <div class="progress-label" id="progress-label">Ready — 0 scenarios selected</div>
+    <div class="progress-time">
+      Elapsed: <span id="elapsed-time">00:00</span>
+      &nbsp;|&nbsp;
+      Est. total: <span id="est-total">—</span>
+    </div>
+  </div>
+</div>
+
+<!-- Controls -->
+<div class="controls">
+  <button id="btn-start">Start All</button>
+  <button id="btn-pause" disabled>Pause</button>
+  <button id="btn-skip" disabled>Skip Current</button>
+  <button id="btn-reset">Reset</button>
+</div>
+
+<!-- Summary (shown when complete) -->
+<div class="summary-section" id="summary-section">
+  <h2>Recording Complete</h2>
+  <div class="summary-stats" id="summary-stats"></div>
+</div>
+
+<!-- Scenario checklist -->
+<div class="list-section">
+  <h2>Scenarios (<span id="selected-count">0</span> selected)</h2>
+  <div class="scenario-list" id="scenario-list"></div>
+</div>
+
+<!-- Iframe simulator -->
+<div class="iframe-wrapper">
+  <div class="iframe-label">
+    <span id="iframe-status-dot" style="width:8px;height:8px;border-radius:50%;background:#444;display:inline-block;"></span>
+    Simulator — <span id="iframe-label-text">idle</span>
+  </div>
+  <iframe id="simulator-frame" src="about:blank" title="Edge Case Simulator"></iframe>
+</div>
+
+<script type="module">
+import { getImplementable, CATEGORIES } from './scenarios.js';
+
+// ── State ──────────────────────────────────────────────────────────────────
+const INTER_DELAY_MS = 2000;   // wait after scenarioComplete before next
+const TIMEOUT_MS = 120_000;    // 2 min hard timeout per scenario
+
+const state = {
+  queue: [],          // scenario objects (checked ones, in order)
+  index: -1,          // current position in queue (-1 = not started)
+  status: 'idle',     // idle | running | paused | done
+  results: {},        // id -> 'done' | 'skipped' | 'timeout'
+  startTime: null,
+  scenarioStartTime: null,
+  elapsedInterval: null,
+  timeoutHandle: null,
+  interDelayHandle: null,
+};
+
+// ── DOM refs ───────────────────────────────────────────────────────────────
+const progressFill   = document.getElementById('progress-fill');
+const progressLabel  = document.getElementById('progress-label');
+const elapsedEl      = document.getElementById('elapsed-time');
+const estTotalEl     = document.getElementById('est-total');
+const selectedCount  = document.getElementById('selected-count');
+const scenarioList   = document.getElementById('scenario-list');
+const summarySection = document.getElementById('summary-section');
+const summaryStats   = document.getElementById('summary-stats');
+const warningBanner  = document.getElementById('warning-banner');
+const iframeEl       = document.getElementById('simulator-frame');
+const iframeLabelText = document.getElementById('iframe-label-text');
+const iframeStatusDot = document.getElementById('iframe-status-dot');
+const btnStart  = document.getElementById('btn-start');
+const btnPause  = document.getElementById('btn-pause');
+const btnSkip   = document.getElementById('btn-skip');
+const btnReset  = document.getElementById('btn-reset');
+
+// ── Build checklist ────────────────────────────────────────────────────────
+const implementable = getImplementable();
+const checkboxMap = {};   // id -> { checkbox, rowEl, statusIconEl }
+
+implementable.forEach(scenario => {
+  const cat = CATEGORIES[scenario.category];
+  const row = document.createElement('div');
+  row.className = 'scenario-row';
+  row.dataset.id = scenario.id;
+
+  const checkbox = document.createElement('input');
+  checkbox.type = 'checkbox';
+  checkbox.checked = true;
+  checkbox.id = `chk-${scenario.id}`;
+  checkbox.addEventListener('change', updateSelectionCount);
+
+  const dot = document.createElement('span');
+  dot.className = 'category-dot';
+  dot.style.background = cat?.color ?? '#888';
+  dot.title = cat?.name ?? scenario.category;
+
+  const idSpan = document.createElement('span');
+  idSpan.className = 'scenario-id';
+  idSpan.textContent = scenario.id;
+
+  const nameSpan = document.createElement('span');
+  nameSpan.className = 'scenario-name';
+  nameSpan.textContent = `${scenario.name} / ${scenario.nameEn}`;
+
+  const spsSpan = document.createElement('span');
+  spsSpan.className = 'scenario-sps';
+  spsSpan.textContent = `SPS ${scenario.sps}`;
+
+  const statusIcon = document.createElement('span');
+  statusIcon.className = 'status-icon';
+  statusIcon.textContent = '';
+
+  row.appendChild(checkbox);
+  row.appendChild(dot);
+  row.appendChild(idSpan);
+  row.appendChild(nameSpan);
+  row.appendChild(spsSpan);
+  row.appendChild(statusIcon);
+  scenarioList.appendChild(row);
+
+  checkboxMap[scenario.id] = { checkbox, rowEl: row, statusIconEl: statusIcon };
+});
+
+updateSelectionCount();
+
+// ── Helpers ────────────────────────────────────────────────────────────────
+function updateSelectionCount() {
+  const checked = Object.values(checkboxMap).filter(e => e.checkbox.checked).length;
+  selectedCount.textContent = checked;
+  if (state.status === 'idle') {
+    progressLabel.innerHTML = `Ready — <strong>${checked}</strong> scenario${checked !== 1 ? 's' : ''} selected`;
+  }
+  // Estimate: ~60s per scenario
+  const estSec = checked * 60;
+  estTotalEl.textContent = formatDuration(estSec * 1000);
+}
+
+function formatDuration(ms) {
+  const total = Math.floor(ms / 1000);
+  const m = Math.floor(total / 60).toString().padStart(2, '0');
+  const s = (total % 60).toString().padStart(2, '0');
+  return `${m}:${s}`;
+}
+
+function buildQueue() {
+  return implementable.filter(s => checkboxMap[s.id]?.checkbox.checked);
+}
+
+function setIframeStatus(label, color) {
+  iframeLabelText.textContent = label;
+  iframeStatusDot.style.background = color;
+}
+
+function setRowState(id, mode) {
+  const entry = checkboxMap[id];
+  if (!entry) return;
+  const { rowEl, statusIconEl } = entry;
+  rowEl.classList.remove('is-recording', 'is-done', 'is-skipped');
+
+  if (mode === 'recording') {
+    rowEl.classList.add('is-recording');
+    statusIconEl.innerHTML = '<span class="recording-pulse"></span>';
+  } else if (mode === 'done') {
+    rowEl.classList.add('is-done');
+    statusIconEl.textContent = '';
+  } else if (mode === 'skipped') {
+    rowEl.classList.add('is-skipped');
+    statusIconEl.textContent = '';
+  } else {
+    statusIconEl.textContent = '';
+  }
+}
+
+function clearRowState(id) {
+  setRowState(id, null);
+}
+
+function showWarning(msg) {
+  warningBanner.textContent = msg;
+  warningBanner.style.display = 'block';
+  setTimeout(() => { warningBanner.style.display = 'none'; }, 8000);
+}
+
+// ── Timer ──────────────────────────────────────────────────────────────────
+function startElapsedTimer() {
+  state.startTime = Date.now();
+  clearInterval(state.elapsedInterval);
+  state.elapsedInterval = setInterval(() => {
+    elapsedEl.textContent = formatDuration(Date.now() - state.startTime);
+  }, 500);
+}
+
+function stopElapsedTimer() {
+  clearInterval(state.elapsedInterval);
+}
+
+// ── Scenario launch ────────────────────────────────────────────────────────
+function launchScenario(scenario) {
+  state.scenarioStartTime = Date.now();
+  const url = `edge-case-simulator.html?scenario=${scenario.id}&autoRecord=true`;
+  iframeEl.src = url;
+  setIframeStatus(`Loading ${scenario.id}…`, '#e2a923');
+  setRowState(scenario.id, 'recording');
+
+  // Hard timeout guard
+  clearTimeout(state.timeoutHandle);
+  state.timeoutHandle = setTimeout(() => {
+    if (state.status !== 'running') return;
+    showWarning(`Timeout (120s): ${scenario.id} auto-skipped.`);
+    finishScenario(scenario.id, 'timeout');
+  }, TIMEOUT_MS);
+
+  const current = state.index + 1;
+  const total = state.queue.length;
+  progressLabel.innerHTML = `Recording <strong>${current}/${total}</strong> — ${scenario.id}: ${scenario.name} / ${scenario.nameEn}`;
+  progressFill.style.width = `${((current - 1) / total) * 100}%`;
+}
+
+function finishScenario(id, result) {
+  clearTimeout(state.timeoutHandle);
+  state.results[id] = result;
+
+  if (result === 'done') {
+    setRowState(id, 'done');
+    setIframeStatus(`Done: ${id}`, '#27ae60');
+  } else if (result === 'timeout') {
+    setRowState(id, 'skipped');
+    setIframeStatus(`Timeout/skip: ${id}`, '#e74c3c');
+  } else {
+    setRowState(id, 'skipped');
+    setIframeStatus(`Skipped: ${id}`, '#7f8fa4');
+  }
+
+  // Advance
+  clearTimeout(state.interDelayHandle);
+  state.interDelayHandle = setTimeout(() => {
+    if (state.status === 'running') {
+      advance();
+    }
+  }, INTER_DELAY_MS);
+}
+
+function advance() {
+  state.index++;
+  if (state.index >= state.queue.length) {
+    finishAll();
+    return;
+  }
+  launchScenario(state.queue[state.index]);
+}
+
+function finishAll() {
+  state.status = 'done';
+  stopElapsedTimer();
+  clearTimeout(state.timeoutHandle);
+  iframeEl.src = 'about:blank';
+  setIframeStatus('All done', '#38ef7d');
+
+  const total = state.queue.length;
+  const done = Object.values(state.results).filter(r => r === 'done').length;
+  const skipped = Object.values(state.results).filter(r => r === 'skipped' || r === 'timeout').length;
+  const elapsed = Date.now() - state.startTime;
+
+  progressFill.style.width = '100%';
+  progressLabel.innerHTML = `<strong>Complete!</strong> ${done}/${total} recorded successfully`;
+
+  summaryStats.innerHTML = `
+    <div class="stat-item"><div class="stat-value">${done}</div><div class="stat-label">Recorded</div></div>
+    <div class="stat-item"><div class="stat-value">${skipped}</div><div class="stat-label">Skipped/Timeout</div></div>
+    <div class="stat-item"><div class="stat-value">${total}</div><div class="stat-label">Total Queued</div></div>
+    <div class="stat-item"><div class="stat-value">${formatDuration(elapsed)}</div><div class="stat-label">Total Elapsed</div></div>
+  `;
+  summarySection.style.display = 'block';
+
+  btnStart.disabled = true;
+  btnPause.disabled = true;
+  btnSkip.disabled = true;
+}
+
+// ── Button handlers ────────────────────────────────────────────────────────
+btnStart.addEventListener('click', () => {
+  if (state.status === 'idle') {
+    const queue = buildQueue();
+    if (queue.length === 0) { alert('No scenarios selected.'); return; }
+    state.queue = queue;
+    state.index = -1;
+    state.results = {};
+    state.status = 'running';
+
+    // Disable checkboxes while running
+    Object.values(checkboxMap).forEach(e => { e.checkbox.disabled = true; });
+
+    btnStart.disabled = true;
+    btnPause.disabled = false;
+    btnSkip.disabled = false;
+    btnReset.disabled = false;
+    summarySection.style.display = 'none';
+
+    startElapsedTimer();
+    advance();
+  }
+});
+
+btnPause.addEventListener('click', () => {
+  if (state.status === 'running') {
+    state.status = 'paused';
+    clearTimeout(state.timeoutHandle);
+    clearTimeout(state.interDelayHandle);
+    btnPause.textContent = 'Resume';
+    setIframeStatus('Paused', '#e2a923');
+  } else if (state.status === 'paused') {
+    state.status = 'running';
+    btnPause.textContent = 'Pause';
+    // Resume: re-launch current or advance
+    if (state.index >= 0 && state.index < state.queue.length) {
+      launchScenario(state.queue[state.index]);
+    } else {
+      advance();
+    }
+  }
+});
+
+btnSkip.addEventListener('click', () => {
+  if (state.status !== 'running' && state.status !== 'paused') return;
+  if (state.index < 0 || state.index >= state.queue.length) return;
+  const currentId = state.queue[state.index].id;
+  clearTimeout(state.timeoutHandle);
+  clearTimeout(state.interDelayHandle);
+  showWarning(`Manually skipped: ${currentId}`);
+  state.results[currentId] = 'skipped';
+  setRowState(currentId, 'skipped');
+  iframeEl.src = 'about:blank';
+  if (state.status === 'paused') { state.status = 'running'; btnPause.textContent = 'Pause'; }
+  advance();
+});
+
+btnReset.addEventListener('click', () => {
+  clearTimeout(state.timeoutHandle);
+  clearTimeout(state.interDelayHandle);
+  stopElapsedTimer();
+
+  state.queue = [];
+  state.index = -1;
+  state.results = {};
+  state.status = 'idle';
+
+  iframeEl.src = 'about:blank';
+  setIframeStatus('idle', '#444');
+
+  progressFill.style.width = '0%';
+  elapsedEl.textContent = '00:00';
+  warningBanner.style.display = 'none';
+  summarySection.style.display = 'none';
+
+  Object.values(checkboxMap).forEach(e => {
+    e.checkbox.disabled = false;
+    e.checkbox.checked = true;
+    clearRowState(e.checkbox.id.replace('chk-', ''));
+  });
+
+  btnStart.disabled = false;
+  btnPause.disabled = true;
+  btnPause.textContent = 'Pause';
+  btnSkip.disabled = true;
+  btnReset.disabled = false;
+
+  updateSelectionCount();
+});
+
+// ── postMessage listener ───────────────────────────────────────────────────
+window.addEventListener('message', (event) => {
+  // Accept messages from same origin or any origin (iframe same-domain)
+  const data = event.data;
+  if (!data || typeof data !== 'object') return;
+
+  if (data.type === 'scenarioComplete') {
+    const id = data.id;
+    if (state.status !== 'running') return;
+    if (state.index < 0 || state.index >= state.queue.length) return;
+    if (state.queue[state.index].id !== id) return;
+    setIframeStatus(`Complete: ${id}`, '#38ef7d');
+    finishScenario(id, 'done');
+  }
+
+  // Also handle generic 'recordingComplete' without id
+  if (data.type === 'recordingComplete') {
+    if (state.status !== 'running') return;
+    if (state.index < 0 || state.index >= state.queue.length) return;
+    const id = state.queue[state.index].id;
+    setIframeStatus(`Complete: ${id}`, '#38ef7d');
+    finishScenario(id, 'done');
+  }
+});
+</script>
+</body>
+</html>

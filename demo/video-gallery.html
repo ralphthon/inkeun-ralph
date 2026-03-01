@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edge Case Video Gallery</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #1a1a2e;
+      --surface: rgba(255,255,255,0.05);
+      --surface-hover: rgba(255,255,255,0.09);
+      --border: rgba(255,255,255,0.08);
+      --text: #e8e8f0;
+      --text-muted: #8888a8;
+      --radius: 10px;
+      --cat-A: #4A90D9;
+      --cat-B: #E74C3C;
+      --cat-C: #F39C12;
+      --cat-D: #27AE60;
+      --cat-E: #8E44AD;
+      --cat-F: #7F8C8D;
+      --tier1: #FFD700;
+      --tier2: #C0C0C0;
+      --tier3: #CD7F32;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(26,26,46,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+    }
+    .topbar-inner {
+      max-width: 1600px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 16px;
+    }
+    .topbar-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      color: #c8c8ee;
+    }
+    .topbar-title span {
+      color: #7878c8;
+      font-weight: 400;
+      font-size: 0.85rem;
+      margin-left: 8px;
+    }
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .filter-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-right: 2px;
+      white-space: nowrap;
+    }
+    .filter-btn {
+      padding: 4px 11px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .filter-btn:hover {
+      background: var(--surface-hover);
+      color: var(--text);
+    }
+    .filter-btn.active {
+      color: #fff;
+      border-color: transparent;
+    }
+    .filter-btn[data-cat="all"].active,
+    .filter-btn[data-tier="all"].active {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+    }
+    .filter-btn[data-cat="A"].active { background: var(--cat-A); }
+    .filter-btn[data-cat="B"].active { background: var(--cat-B); }
+    .filter-btn[data-cat="C"].active { background: var(--cat-C); }
+    .filter-btn[data-cat="D"].active { background: var(--cat-D); }
+    .filter-btn[data-cat="E"].active { background: var(--cat-E); }
+    .filter-btn[data-cat="F"].active { background: var(--cat-F); }
+    .filter-btn[data-tier="1"].active { background: var(--tier1); color: #111; }
+    .filter-btn[data-tier="2"].active { background: var(--tier2); color: #111; }
+    .filter-btn[data-tier="3"].active { background: var(--tier3); }
+    .filter-sep {
+      width: 1px;
+      height: 24px;
+      background: var(--border);
+      margin: 0 4px;
+    }
+    .result-count {
+      margin-left: auto;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+
+    /* ── Grid ── */
+    .grid-container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 24px 20px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+    @media (max-width: 1200px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 860px)  { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 520px)  { .grid { grid-template-columns: 1fr; } }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.18s, box-shadow 0.18s, opacity 0.18s;
+      position: relative;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+      background: var(--surface-hover);
+    }
+    .card.hidden {
+      display: none;
+    }
+    .card.not-implementable {
+      opacity: 0.55;
+    }
+    .card.not-implementable:hover {
+      opacity: 0.72;
+    }
+
+    /* Thumbnail */
+    .thumb {
+      position: relative;
+      aspect-ratio: 16/9;
+      background: #111120;
+      overflow: hidden;
+    }
+    .thumb video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .thumb-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .thumb-icon {
+      font-size: 2rem;
+      opacity: 0.5;
+    }
+    .thumb-id-big {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      opacity: 0.4;
+    }
+    .play-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.18s;
+      background: rgba(0,0,0,0.3);
+    }
+    .card:hover .play-overlay {
+      opacity: 1;
+    }
+    .play-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .play-icon svg {
+      fill: #111;
+      margin-left: 3px;
+    }
+    .no-video-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.2);
+    }
+    .no-video-badge {
+      font-size: 0.65rem;
+      padding: 3px 8px;
+      border-radius: 20px;
+      background: rgba(0,0,0,0.5);
+      color: rgba(255,255,255,0.4);
+      letter-spacing: 0.05em;
+    }
+    .not-impl-overlay {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 0.62rem;
+      padding: 3px 8px;
+      border-radius: 20px;
+      background: rgba(180,50,50,0.85);
+      color: #fff;
+      letter-spacing: 0.04em;
+      font-weight: 600;
+      pointer-events: none;
+    }
+
+    /* Card body */
+    .card-body {
+      padding: 12px 14px 14px;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .id-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      letter-spacing: 0.06em;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .card-name {
+      font-size: 0.88rem;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--text);
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+    .card-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      margin-bottom: 10px;
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+    }
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .tier-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 20px;
+      letter-spacing: 0.05em;
+    }
+    .tier-1 { background: rgba(255,215,0,0.15); color: var(--tier1); border: 1px solid rgba(255,215,0,0.3); }
+    .tier-2 { background: rgba(192,192,192,0.1); color: var(--tier2); border: 1px solid rgba(192,192,192,0.25); }
+    .tier-3 { background: rgba(205,127,50,0.12); color: var(--tier3); border: 1px solid rgba(205,127,50,0.3); }
+    .sps-badge {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+    .sps-badge strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* Empty state */
+    .empty-state {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(0,0,0,0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s;
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .modal {
+      position: relative;
+      background: #16162a;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      width: 100%;
+      max-width: 900px;
+      max-height: 90vh;
+      overflow-y: auto;
+      transform: scale(0.94) translateY(12px);
+      transition: transform 0.22s;
+    }
+    .modal-overlay.open .modal {
+      transform: scale(1) translateY(0);
+    }
+    .modal-close {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      z-index: 10;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.06);
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .modal-close:hover {
+      background: rgba(255,255,255,0.12);
+      color: var(--text);
+    }
+    .modal-video-wrap {
+      aspect-ratio: 16/9;
+      background: #0a0a18;
+      border-radius: 14px 14px 0 0;
+      overflow: hidden;
+    }
+    .modal-video-wrap video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    .modal-video-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: var(--text-muted);
+    }
+    .modal-video-placeholder .ph-icon { font-size: 3rem; opacity: 0.3; }
+    .modal-video-placeholder .ph-text { font-size: 0.85rem; }
+    .modal-meta {
+      padding: 22px 26px 26px;
+    }
+    .modal-title-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .modal-id-badge {
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      color: #fff;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .modal-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+    .modal-title-en {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .modal-description {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .modal-scores {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .score-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .score-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+    }
+    .score-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .score-divider {
+      width: 1px;
+      background: var(--border);
+      align-self: stretch;
+    }
+    .modal-failure {
+      background: rgba(231,76,60,0.08);
+      border: 1px solid rgba(231,76,60,0.2);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+    }
+    .modal-failure-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(231,76,60,0.8);
+      margin-bottom: 4px;
+    }
+    .modal-failure-text {
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+    .modal-expected {
+      background: rgba(39,174,96,0.08);
+      border: 1px solid rgba(39,174,96,0.2);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 16px;
+    }
+    .modal-expected-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(39,174,96,0.8);
+      margin-bottom: 4px;
+    }
+    .modal-expected-text {
+      font-size: 0.85rem;
+      color: var(--text);
+      font-family: 'Consolas', 'Fira Code', monospace;
+    }
+    .modal-badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .modal-not-impl-badge {
+      font-size: 0.72rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: rgba(180,50,50,0.2);
+      color: #ff7070;
+      border: 1px solid rgba(180,50,50,0.3);
+      font-weight: 600;
+    }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 3px; }
+  </style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-title">
+      Edge Case Video Gallery
+      <span>Physical AI LEGO Loader Simulator</span>
+    </div>
+
+    <div class="filter-group">
+      <span class="filter-label">Category</span>
+      <button class="filter-btn active" data-cat="all">All</button>
+      <button class="filter-btn" data-cat="A" style="--c: var(--cat-A)">A</button>
+      <button class="filter-btn" data-cat="B" style="--c: var(--cat-B)">B</button>
+      <button class="filter-btn" data-cat="C" style="--c: var(--cat-C)">C</button>
+      <button class="filter-btn" data-cat="D" style="--c: var(--cat-D)">D</button>
+      <button class="filter-btn" data-cat="E" style="--c: var(--cat-E)">E</button>
+      <button class="filter-btn" data-cat="F" style="--c: var(--cat-F)">F</button>
+    </div>
+
+    <div class="filter-sep"></div>
+
+    <div class="filter-group">
+      <span class="filter-label">Tier</span>
+      <button class="filter-btn active" data-tier="all">All</button>
+      <button class="filter-btn" data-tier="1">Tier 1</button>
+      <button class="filter-btn" data-tier="2">Tier 2</button>
+      <button class="filter-btn" data-tier="3">Tier 3</button>
+    </div>
+
+    <div class="result-count" id="result-count"></div>
+  </div>
+</div>
+
+<!-- Grid -->
+<div class="grid-container">
+  <div class="grid" id="grid">
+    <div class="empty-state">Loading scenarios...</div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true">
+  <div class="modal" id="modal">
+    <button class="modal-close" id="modal-close" aria-label="Close">&#x2715;</button>
+    <div class="modal-video-wrap" id="modal-video-wrap"></div>
+    <div class="modal-meta" id="modal-meta"></div>
+  </div>
+</div>
+
+<script type="module">
+  import { SCENARIOS, CATEGORIES } from './scenarios.js';
+
+  /* ── State ── */
+  let activeCat = 'all';
+  let activeTier = 'all';
+
+  /* ── Category color helper ── */
+  const catColor = cat => CATEGORIES[cat]?.color ?? '#888';
+
+  /* ── Tier label helper ── */
+  const tierLabel = t => t === 1 ? 'Tier 1' : t === 2 ? 'Tier 2' : 'Tier 3';
+
+  /* ── Category names ── */
+  const catName = cat => CATEGORIES[cat]
+    ? `${cat} · ${CATEGORIES[cat].name}`
+    : cat;
+
+  /* ── Video path ── */
+  const videoPath = id => `videos/${id}.webm`;
+
+  /* ── Check if video exists (async, cache) ── */
+  const videoExists = {};
+  async function checkVideo(id) {
+    if (id in videoExists) return videoExists[id];
+    try {
+      const r = await fetch(videoPath(id), { method: 'HEAD' });
+      videoExists[id] = r.ok;
+    } catch {
+      videoExists[id] = false;
+    }
+    return videoExists[id];
+  }
+
+  /* ── Build card HTML ── */
+  function buildCard(s) {
+    const color = catColor(s.category);
+    const hasVid = videoExists[s.id] ?? false;
+    const notImpl = !s.implementable;
+
+    const thumbInner = hasVid
+      ? `<video src="${videoPath(s.id)}" muted preload="none" poster="" loading="lazy"></video>
+         <div class="play-overlay">
+           <div class="play-icon">
+             <svg width="14" height="16" viewBox="0 0 14 16"><path d="M0 0 L14 8 L0 16 Z"/></svg>
+           </div>
+         </div>`
+      : `<div class="thumb-placeholder" style="background: ${color}18;">
+           <div class="thumb-icon">&#128249;</div>
+           <div class="thumb-id-big">${s.id}</div>
+         </div>
+         <div class="no-video-overlay">
+           <span class="no-video-badge">No video yet</span>
+         </div>`;
+
+    const descText = notImpl && s.expectedBehavior
+      ? `Expected: ${s.expectedBehavior}`
+      : (s.description ?? '');
+
+    return `
+      <div class="card${notImpl ? ' not-implementable' : ''}"
+           data-id="${s.id}"
+           data-cat="${s.category}"
+           data-tier="${s.tier}">
+        <div class="thumb">
+          ${thumbInner}
+          ${notImpl ? '<div class="not-impl-overlay">Not Implementable</div>' : ''}
+        </div>
+        <div class="card-body">
+          <div class="card-header">
+            <span class="id-badge" style="background:${color}">${s.id}</span>
+            <div class="card-name">${s.name}</div>
+          </div>
+          <div class="card-desc">${descText}</div>
+          <div class="card-footer">
+            <span class="tier-badge tier-${s.tier}">${tierLabel(s.tier)}</span>
+            <span class="sps-badge">SPS <strong>${s.sps.toFixed(1)}</strong></span>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  /* ── Render grid ── */
+  function renderGrid() {
+    const grid = document.getElementById('grid');
+    let html = '';
+    let count = 0;
+
+    for (const s of SCENARIOS) {
+      const catOk = activeCat === 'all' || s.category === activeCat;
+      const tierOk = activeTier === 'all' || s.tier === parseInt(activeTier);
+      const visible = catOk && tierOk;
+      if (visible) count++;
+      html += buildCard(s); // always render; toggle visibility below
+    }
+
+    grid.innerHTML = html || '<div class="empty-state">No scenarios match the current filters.</div>';
+    updateVisibility();
+    updateCount();
+    attachCardListeners();
+  }
+
+  function updateVisibility() {
+    const cards = document.querySelectorAll('#grid .card');
+    cards.forEach(card => {
+      const catOk = activeCat === 'all' || card.dataset.cat === activeCat;
+      const tierOk = activeTier === 'all' || card.dataset.tier === activeTier;
+      card.classList.toggle('hidden', !(catOk && tierOk));
+    });
+    updateCount();
+  }
+
+  function updateCount() {
+    const total = document.querySelectorAll('#grid .card').length;
+    const visible = document.querySelectorAll('#grid .card:not(.hidden)').length;
+    document.getElementById('result-count').textContent =
+      visible === total ? `${total} scenarios` : `${visible} / ${total} scenarios`;
+  }
+
+  function attachCardListeners() {
+    document.querySelectorAll('#grid .card').forEach(card => {
+      card.addEventListener('click', () => openModal(card.dataset.id));
+    });
+  }
+
+  /* ── Filter buttons ── */
+  document.querySelectorAll('.filter-btn[data-cat]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn[data-cat]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeCat = btn.dataset.cat;
+      updateVisibility();
+    });
+  });
+
+  document.querySelectorAll('.filter-btn[data-tier]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn[data-tier]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeTier = btn.dataset.tier;
+      updateVisibility();
+    });
+  });
+
+  /* ── Modal ── */
+  const overlay = document.getElementById('modal-overlay');
+  const modalVideoWrap = document.getElementById('modal-video-wrap');
+  const modalMeta = document.getElementById('modal-meta');
+
+  function openModal(id) {
+    const s = SCENARIOS.find(x => x.id === id);
+    if (!s) return;
+
+    const color = catColor(s.category);
+    const hasVid = videoExists[id] ?? false;
+    const notImpl = !s.implementable;
+
+    /* Video section */
+    if (hasVid) {
+      modalVideoWrap.innerHTML = `
+        <video src="${videoPath(id)}" controls autoplay loop muted
+               style="width:100%;height:100%;object-fit:contain;display:block;">
+        </video>`;
+    } else {
+      modalVideoWrap.innerHTML = `
+        <div class="modal-video-placeholder" style="background: ${color}10;">
+          <div class="ph-icon">&#128249;</div>
+          <div class="ph-text">No recording available for ${id}</div>
+        </div>`;
+    }
+
+    /* Metadata section */
+    const sodRow = `
+      <div class="score-item">
+        <div class="score-label">SPS</div>
+        <div class="score-value" style="color:${color}">${s.sps.toFixed(1)}</div>
+      </div>
+      <div class="score-divider"></div>
+      <div class="score-item">
+        <div class="score-label">Severity</div>
+        <div class="score-value">${s.severity}</div>
+      </div>
+      <div class="score-divider"></div>
+      <div class="score-item">
+        <div class="score-label">Occurrence</div>
+        <div class="score-value">${s.occurrence}</div>
+      </div>
+      <div class="score-divider"></div>
+      <div class="score-item">
+        <div class="score-label">Detection</div>
+        <div class="score-value">${s.detection}</div>
+      </div>
+      <div class="score-divider"></div>
+      <div class="score-item">
+        <div class="score-label">Tier</div>
+        <div class="score-value">
+          <span class="tier-badge tier-${s.tier}">${tierLabel(s.tier)}</span>
+        </div>
+      </div>
+      <div class="score-divider"></div>
+      <div class="score-item">
+        <div class="score-label">Category</div>
+        <div class="score-value" style="font-size:0.85rem;">${catName(s.category)}</div>
+      </div>`;
+
+    const failureBlock = s.failureMode ? `
+      <div class="modal-failure">
+        <div class="modal-failure-label">Failure Mode</div>
+        <div class="modal-failure-text">${s.failureMode}</div>
+      </div>` : '';
+
+    const expectedBlock = (notImpl && s.expectedBehavior) ? `
+      <div class="modal-expected">
+        <div class="modal-expected-label">Expected Behavior</div>
+        <div class="modal-expected-text">${s.expectedBehavior}</div>
+      </div>` : '';
+
+    const notImplBadge = notImpl
+      ? '<span class="modal-not-impl-badge">Not Implementable</span>' : '';
+
+    modalMeta.innerHTML = `
+      <div class="modal-title-row">
+        <span class="modal-id-badge" style="background:${color}">${s.id}</span>
+        <div>
+          <div class="modal-title">${s.name}</div>
+          <div class="modal-title-en">${s.nameEn ?? ''}</div>
+        </div>
+      </div>
+      <div class="modal-description">${s.description ?? ''}</div>
+      <div class="modal-scores">${sodRow}</div>
+      ${failureBlock}
+      ${expectedBlock}
+      <div class="modal-badges">${notImplBadge}</div>`;
+
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    /* Stop video */
+    const vid = modalVideoWrap.querySelector('video');
+    if (vid) { vid.pause(); vid.src = ''; }
+  }
+
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+  /* ── Init: pre-check videos then render ── */
+  async function init() {
+    /* Fire all HEAD requests in parallel */
+    await Promise.allSettled(SCENARIOS.map(s => checkVideo(s.id)));
+    renderGrid();
+  }
+
+  init();
+</script>
+</body>
+</html>
